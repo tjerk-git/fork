@@ -110,7 +110,7 @@ class ScenarioController extends Controller
         ]);
 
         if ($scenario->access_code !== $request->accessCode) {
-            return redirect()->back()->with('error', 'Invalid access code');
+            return redirect()->back()->with('error', 'Verkeerde toegangscode');
         }
 
         // set session to allow access to this scenario
