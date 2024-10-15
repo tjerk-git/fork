@@ -8,19 +8,12 @@
     <title>{{ $title ?? 'FORK' }}</title>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
-    <link rel="stylesheet" href="{{ asset('css/backend.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/frontend.css') }}">
 </head>
 
 <body>
     <header>
-        <div>
-            @if (Auth::check())
-                <div>
-                    <h1>Welkom: {{ Auth::user()->email }}</h1>
-                    <a href="{{ route('logout') }}">Uitloggen</a>
-                </div>
-            @endif
-        </div>
+
     </header>
     <main class="container">
         @yield('content')

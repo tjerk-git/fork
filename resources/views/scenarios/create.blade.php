@@ -55,6 +55,14 @@
         </form>
     </div>
 
+    @push('styles')
+        <style>
+            video {
+                max-width: 600px;
+            }
+        </style>
+    @endpush
+
     @push('scripts')
         <script>
             document.getElementById('is_public').addEventListener('change', function() {

@@ -10,6 +10,13 @@ Route::get('/debug', function () {
 
 Route::resource('scenarios', ScenarioController::class);
 
+// get scenario by slug
+Route::get('/scenarios/start/{slug}', [ScenarioController::class, 'showBySlug']);
+
+// verify the scenario access code
+Route::post('/scenarios/start/{slug}', [ScenarioController::class, 'verifyAccessCode'])->name('verifyAccessCode');
+
+
 Route::get('/results', function () {
    // get the debug controller index method
     return app('App\Http\Controllers\DebugController')->results();

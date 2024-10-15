@@ -1,5 +1,6 @@
 @extends('layouts.app')
 
+
 @section('content')
     <div class="container">
         <h1>{{ $scenario->name }}</h1>
@@ -9,6 +10,7 @@
             <div class="card-body">
                 <h5 class="card-title">Description</h5>
                 <p class="card-text">{{ $scenario->description }}</p>
+
 
                 @if ($scenario->attachment)
                     @php
@@ -77,4 +79,6 @@
             <a href="{{ route('scenarios.index') }}" class="btn btn-secondary">Back to All Scenarios</a>
         </div>
     </div>
+
+
 @endsection

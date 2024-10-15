@@ -36,7 +36,6 @@ class ScenarioController extends Controller
         ]);
 
 
-
         $validatedData['user_id'] = auth()->id();
         $validatedData['slug'] = Str::slug($validatedData['name']);
 
@@ -82,5 +81,41 @@ class ScenarioController extends Controller
         $this->authorize('delete', $scenario);
         $scenario->delete();
         return redirect()->route('scenarios.index')->with('success', 'Scenario deleted successfully');
+    }
+
+    public function showBySlug($slug)
+    {
+        $scenario = Scenario::whereSlug($slug)->firstOrFail();
+
+        // if not public redirect to 404
+        if (!$scenario->is_public) {
+            abort(404);
+        }
+
+        // if this scenario has an access code redirect to access code page
+        if ($scenario->access_code && !session()->has('access_code_' . $scenario->id)) {
+            return view('scenarios.accessCode', compact('scenario'));
+        }else{
+            return view('scenarios.publicShow', compact('scenario'));
+        }
+
+    }
+
+    public function verifyAccessCode(Request $request, $slug)
+    {
+        $scenario = Scenario::whereSlug($slug)->firstOrFail();
+
+        $request->validate([
+            'accessCode' => 'required|string|min:6|max:20',
+        ]);
+
+        if ($scenario->access_code !== $request->accessCode) {
+            return redirect()->back()->with('error', 'Invalid access code');
+        }
+
+        // set session to allow access to this scenario
+        session()->put('access_code_' . $scenario->id, true);
+
+        return view('scenarios.publicShow', compact('scenario'));
     }
 }
