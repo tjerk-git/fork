@@ -28,4 +28,15 @@ class Scenario extends Model
     {
         return $this->hasMany(Result::class);
     }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($scenario) {
+            if ($scenario->attachment) {
+                Storage::disk('public')->delete($scenario->attachment);
+            }
+        });
+    }
 }

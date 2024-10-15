@@ -2,10 +2,13 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ScenarioController;
 
 Route::get('/debug', function () {
     return app('App\Http\Controllers\DebugController')->index();
 })->middleware('auth');
+
+Route::resource('scenarios', ScenarioController::class);
 
 Route::get('/results', function () {
    // get the debug controller index method
