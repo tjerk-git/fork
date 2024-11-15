@@ -16,7 +16,7 @@
         <div>
             @if (Auth::check())
                 <div>
-                    <h1>Welkom: {{ Auth::user()->email }}</h1>
+                    Welkom: {{ Auth::user()->email }}
                     <a href="{{ route('logout') }}">Uitloggen</a>
                 </div>
             @endif

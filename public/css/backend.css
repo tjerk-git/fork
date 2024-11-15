@@ -1,3 +1,14 @@
 video {
   max-width: 600px;
 }
+
+header {
+  background-color: #f8f9fa;
+  padding: 2rem;
+}
+
+header div {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}

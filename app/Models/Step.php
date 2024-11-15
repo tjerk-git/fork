@@ -19,13 +19,13 @@ class Step extends Model
         'description',
         'fork_to_step',
         'scenario_id',
+        'attachment',
+        'open_question',
+        'multiple_choice_question',
+        'multiple_choice_option_1',
+        'multiple_choice_option_2',
+        'multiple_choice_option_3',
     ];
-
-    // has many components
-    public function components()
-    {
-        return $this->hasMany(Component::class);
-    }
 
     // belongs to scenario
     public function scenario()

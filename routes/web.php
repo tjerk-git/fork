@@ -3,12 +3,21 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ScenarioController;
+use App\Http\Controllers\StepController;
 
 Route::get('/debug', function () {
     return app('App\Http\Controllers\DebugController')->index();
 })->middleware('auth');
 
 Route::resource('scenarios', ScenarioController::class);
+
+Route::get('/scenarios/{scenario}/steps/create', [StepController::class, 'create'])->name('steps.create');
+Route::post('/scenarios/{scenario}/steps', [StepController::class, 'store'])->name('steps.store');
+
+Route::get('/scenarios/{scenario}/steps/{step}/edit', [StepController::class, 'edit'])->name('steps.edit');
+
+// update step
+Route::put('/scenarios/{scenario}/steps/{step}', [StepController::class, 'update'])->name('steps.update');
 
 // get scenario by slug
 Route::get('/scenarios/start/{slug}', [ScenarioController::class, 'showBySlug']);

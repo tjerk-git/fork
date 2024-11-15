@@ -17,6 +17,12 @@ return new class extends Migration
             $table->text('condition')->nullable();
             $table->text('description')->nullable();
             $table->integer('fork_to_step')->nullable();
+            $table->text('attachment')->nullable();
+            $table->text('open_question')->nullable();
+            $table->text('multiple_choice_question')->nullable();
+            $table->text('multiple_choice_option_1')->nullable();
+            $table->text('multiple_choice_option_2')->nullable();
+            $table->text('multiple_choice_option_3')->nullable();
             $table->foreignId('scenario_id')->constrained('scenarios')->onDelete('cascade');
             $table->timestamps();
         });
