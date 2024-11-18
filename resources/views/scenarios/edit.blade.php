@@ -8,7 +8,7 @@
             @csrf
             @method('PUT')
             <div class="form-group">
-                <label for="name">Name</label>
+                <label for="name">Titel</label>
                 <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name"
                     value="{{ old('name', $scenario->name) }}" required>
                 @error('name')
@@ -17,7 +17,7 @@
             </div>
 
             <div class="form-group">
-                <label for="description">Description</label>
+                <label for="description">Omschrijving</label>
                 <textarea class="form-control @error('description') is-invalid @enderror" id="description" name="description"
                     rows="3" required>{{ old('description', $scenario->description) }}</textarea>
                 @error('description')
@@ -26,15 +26,22 @@
             </div>
 
             <div class="form-group">
-                <label for="attachment">Attachment (optional)</label>
+                <label for="attachment">Video of afbeelding (optioneel)</label>
                 @if ($scenario->attachment)
-                    <p>Current attachment: <a href="{{ Storage::url($scenario->attachment) }}" target="_blank">View</a></p>
+                    @php
+                        $fileExtension = pathinfo($scenario->attachment, PATHINFO_EXTENSION);
+                    @endphp
+                    @if ($fileExtension == 'mp4')
+                        <video controls class="img-fluid">
+                            <source src="{{ Storage::url($scenario->attachment) }}" type="video/{{ $fileExtension }}">
+                            Your browser does not support the video tag.
+                        </video>
+                    @else
+                        <img src="{{ asset('storage/' . $scenario->attachment) }}" alt="Uploaded Image">
+                    @endif
                 @endif
                 <input type="file" class="form-control-file @error('attachment') is-invalid @enderror" id="attachment"
                     name="attachment">
-                @error('attachment')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
             </div>
 
             <div class="form-group">

@@ -6,33 +6,14 @@
 
         <div class="form-group">
             <label for="question_type">Vraag:</label>
-            <select class="form-control" id="question_type" name="question_type">
-                <option value="" selected>Selecteer een type vraag</option>
+            <select class="form-control" id="question_type_selector" name="question_type_selector">
+                <option value="">Selecteer een type vraag</option>
                 <option value="open_question">Open vraag</option>
                 <option value="multiple_c">Meerkeuze vraag</option>
             </select>
         </div>
 
-        <script>
-            document.getElementById('question_type').addEventListener('change', function() {
-                var openQuestionDiv = document.getElementById('open_question');
-                if (this.value === 'open_question') {
-                    openQuestionDiv.style.display = 'block';
-                } else {
-                    openQuestionDiv.style.display = 'none';
-                }
 
-                var multipleChoiceDiv = document.getElementById('multiple_c');
-                if (this.value === 'multiple_c') {
-                    multipleChoiceDiv.style.display = 'block';
-                } else {
-                    multipleChoiceDiv.style.display = 'none';
-                }
-            });
-
-            // Trigger change event on page load to set the initial state
-            document.getElementById('question_type').dispatchEvent(new Event('change'));
-        </script>
 
         <form action="{{ route('steps.store', ['scenario' => $scenario->id]) }}" method="POST"
             enctype="multipart/form-data">
@@ -47,7 +28,7 @@
             </div>
 
 
-            <div class="form-group" id="open_question" style="display:none;">
+            <div class="form-group" id="open_question_div" style="display:none;">
                 <label for="open_question">Een open vraag</label>
                 <input type="text" class="form-control" id="open_question" name="open_question"
                     value="{{ old('open_question') }}">
@@ -72,6 +53,7 @@
             </div>
 
             <input type="hidden" name="scenario_id" value="{{ $scenario->id }}">
+            <input type="hidden" name="question_type" id="question_type">
 
 
             <div class="form-group">
@@ -80,19 +62,45 @@
                 </button>
             </div>
 
-            @if ($scenario->steps->count() > 0)
+            {{-- @if ($scenario->steps->count() > 0)
                 <div class="form-group">
-                    <label for="previous_step_id">Link naar andere stap</label>
+                    <label for="previous_step_id">Link naar andere vraag</label>
                     <select class="form-control" id="fork_to_step" name="fork_to_step">
                         <option value="" selected>Geen</option>
                         @foreach ($scenario->steps as $step)
-                            <option value="{{ $step->id }}">{{ $step->type }}</option>
+                            <option value="{{ $step->id }}">{{ $step->id }}</option>
                         @endforeach
                     </select>
                 </div>
-            @endif
+            @endif --}}
 
             <script>
+                document.getElementById('question_type_selector').addEventListener('change', function() {
+                    const openQuestionDiv = document.getElementById('open_question_div');
+                    const questionType = document.getElementById('question_type');
+
+                    if (this.value === 'open_question') {
+                        openQuestionDiv.style.display = 'block';
+                        questionType.value = 'open_question';
+                        console.log(questionType.value);
+                    } else {
+                        openQuestionDiv.style.display = 'none';
+                    }
+
+                    const multipleChoiceDiv = document.getElementById('multiple_c');
+                    if (this.value === 'multiple_c') {
+                        multipleChoiceDiv.style.display = 'block';
+                        questionType.value = 'multiple_choice_question';
+                        console.log(questionType.value);
+                    } else {
+                        multipleChoiceDiv.style.display = 'none';
+                    }
+                });
+
+                // Trigger change event on page load to set the initial state
+                document.getElementById('question_type').dispatchEvent(new Event('change'));
+
+
                 document.getElementById('show_attachment').addEventListener('click', function() {
                     const attachmentDiv = document.getElementById('attachment');
                     const attachmentInput = document.getElementById('show_attachment');

@@ -16,8 +16,14 @@ Route::post('/scenarios/{scenario}/steps', [StepController::class, 'store'])->na
 
 Route::get('/scenarios/{scenario}/steps/{step}/edit', [StepController::class, 'edit'])->name('steps.edit');
 
+// delete step
+Route::delete('/scenarios/{scenario}/steps/{step}/delete', [StepController::class, 'destroy'])->name('steps.destroy');
+
 // update step
-Route::put('/scenarios/{scenario}/steps/{step}', [StepController::class, 'update'])->name('steps.update');
+Route::put('/scenarios/{scenario}/steps/{step}/edit', [StepController::class, 'update'])->name('steps.update');
+
+// update scenario
+Route::put('/scenarios/{scenario}/edit', [ScenarioController::class, 'update'])->name('scenarios.update');
 
 // get scenario by slug
 Route::get('/scenarios/start/{slug}', [ScenarioController::class, 'showBySlug']);

@@ -56,14 +56,15 @@ class ScenarioController extends Controller
 
     public function update(Request $request, Scenario $scenario)
     {
+
        
         $validatedData = $request->validate([
             'name' => 'required|max:255',
             'description' => 'required',
             'attachment' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg,mp4,mov,avi,wmv|max:204800', // 200MB max, allow images and video files
             'is_public' => 'boolean',
-            'access_code' => 'nullable|string|min:6|max:20',
         ]);
+
 
         $validatedData['slug'] = Str::slug($validatedData['name']);
 
@@ -71,7 +72,8 @@ class ScenarioController extends Controller
             $validatedData['attachment'] = $request->file('attachment')->store('scenario-attachments', 'public');
         }
 
-        $scenario->update($validatedData);
+    
+        $scenario->update(array_filter($validatedData));
 
         return redirect()->route('scenarios.show', $scenario)->with('success', 'Scenario updated successfully');
     }

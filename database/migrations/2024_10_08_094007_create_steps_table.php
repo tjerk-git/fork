@@ -18,6 +18,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->integer('fork_to_step')->nullable();
             $table->text('attachment')->nullable();
+            $table->text('question_type')->nullable();
             $table->text('open_question')->nullable();
             $table->text('multiple_choice_question')->nullable();
             $table->text('multiple_choice_option_1')->nullable();

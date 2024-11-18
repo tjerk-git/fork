@@ -20,6 +20,24 @@
                 <th>Publieke URL</th>
                 <td>{{ $scenario->slug }}</td>
             </tr>
+
+            <tr>
+                <th>Bewerken</th>
+                <td><a href="{{ route('scenarios.edit', $scenario) }}" class="btn btn-primary">Scenario wijzigen</a></td>
+            </tr>
+
+            <tr>
+                <th>Verwijderen</th>
+                <td>
+                    <form action="{{ route('scenarios.destroy', $scenario) }}" method="POST" style="display: inline-block;">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger"
+                            onclick="return confirm('Weet je zeker dat je dit scenario wilt verwijderen?')">Scenario
+                            verwijderen</button>
+                    </form>
+                </td>
+            </tr>
         </table>
 
 
@@ -32,15 +50,13 @@
                     @php
                         $fileExtension = pathinfo($scenario->attachment, PATHINFO_EXTENSION);
                     @endphp
-
-                    @if (in_array($fileExtension, ['jpg', 'jpeg', 'png', 'gif']))
-                        <img src="{{ Storage::url($scenario->attachment) }}" alt="Attachment" class="img-fluid">
-                    @elseif (in_array($fileExtension, ['mp4', 'webm', 'ogg']))
+                    @if ($fileExtension == 'mp4')
                         <video controls class="img-fluid">
                             <source src="{{ Storage::url($scenario->attachment) }}" type="video/{{ $fileExtension }}">
                             Your browser does not support the video tag.
                         </video>
                     @else
+                        <img src="{{ asset('storage/' . $scenario->attachment) }}" alt="Uploaded Image">
                     @endif
                 @endif
 
@@ -49,19 +65,43 @@
 
         <h2>Vragen:</h2>
         @if ($scenario->steps->count() > 0)
-            <ul class="list-group mb-4">
-                @foreach ($scenario->steps as $step)
-                    <li class="list-group-item">
-                        @if (!empty($step->open_question))
-                            <a href="{{ route('steps.edit', ['step' => $step->id, 'scenario' => $scenario->id]) }}">Open
-                                vraag</a>
-                        @else
-                            <a href="{{ route('steps.edit', ['step' => $step->id, 'scenario' => $scenario->id]) }}">Meerkeuze
-                                vraag</a>
-                        @endif
-                    </li>
-                @endforeach
-            </ul>
+            <table class="table table-bordered mb-4">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Vraag</th>
+                        <th>Acties</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($scenario->steps as $step)
+                        <tr>
+                            <td>{{ $loop->iteration }}</td>
+
+                            <td>
+                                @if (!empty($step->open_question))
+                                    Open vraag: {{ Str::limit($step->open_question, 100) }}
+                                @else
+                                    Meerkeuze vraag: {{ Str::limit($step->multiple_choice_question, 100) }}
+                                @endif
+                            </td>
+                            <td>
+                                <a href="{{ route('steps.edit', ['step' => $step->id, 'scenario' => $scenario->id]) }}"
+                                    class="btn btn-primary btn-sm">Aanpassen</a>
+
+                                <form
+                                    action="{{ route('steps.destroy', ['step' => $step->id, 'scenario' => $scenario->id]) }}"
+                                    method="POST" style="display: inline-block;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger btn-sm outline"
+                                        onclick="return confirm('Weet je zeker dat je deze vraag wilt verwijderen?')">Verwijderen</button>
+                                </form>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
         @else
             <p>Geen vragen toegevoegd..</p>
         @endif

@@ -21,6 +21,7 @@ class Step extends Model
         'scenario_id',
         'attachment',
         'open_question',
+        'question_type',
         'multiple_choice_question',
         'multiple_choice_option_1',
         'multiple_choice_option_2',
