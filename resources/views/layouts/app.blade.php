@@ -9,6 +9,7 @@
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
     <link rel="stylesheet" href="{{ asset('css/backend.css') }}">
+
 </head>
 
 <body>
@@ -25,6 +26,7 @@
     <main class="container">
         @yield('content')
     </main>
+
 </body>
 
 </html>

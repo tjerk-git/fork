@@ -32,6 +32,9 @@ Route::get('/scenarios/start/{slug}', [ScenarioController::class, 'showBySlug'])
 Route::post('/scenarios/start/{slug}', [ScenarioController::class, 'verifyAccessCode'])->name('verifyAccessCode');
 
 
+Route::post('/scenario/{scenario}/update-step-order', [ScenarioController::class, 'updateStepOrder'])
+    ->name('scenario.update-step-order');
+
 Route::get('/results', function () {
    // get the debug controller index method
     return app('App\Http\Controllers\DebugController')->results();

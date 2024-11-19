@@ -27,6 +27,8 @@ class StepController extends Controller
         return redirect()->route('scenarios.show', $scenario->id);
     }
 
+    
+
     // update the step
     public function update(Request $request, Scenario $scenario, Step $step)
     {

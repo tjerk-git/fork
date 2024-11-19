@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Scenario;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use App\Models\Step;
 
 class ScenarioController extends Controller
 {
@@ -52,6 +53,21 @@ class ScenarioController extends Controller
     {
 
         return view('scenarios.edit', compact('scenario'));
+    }
+
+    public function updateStepOrder(Request $request, Scenario $scenario)
+    {
+        $request->validate([
+            'steps' => 'required|array'
+        ]);
+
+        foreach ($request->input('steps') as $index => $stepId) {
+            $step = Step::findOrFail($stepId);
+            $step->order = $index + 1;
+            $step->save();
+        }
+
+        return response()->json(['success' => true]);
     }
 
     public function update(Request $request, Scenario $scenario)

@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 
+
 @section('content')
     <div class="container">
         <h1>{{ $scenario->name }}</h1>
@@ -73,9 +74,10 @@
                         <th>Acties</th>
                     </tr>
                 </thead>
-                <tbody>
-                    @foreach ($scenario->steps as $step)
-                        <tr>
+                <tbody id="steps-sortable">
+                    @foreach ($scenario->steps()->orderBy('order')->get() as $step)
+                        <tr data-id="{{ $step->id }}">
+                            <td class="handle" style="cursor: move;">&#9776;</td>
                             <td>{{ $loop->iteration }}</td>
 
                             <td>
@@ -126,5 +128,42 @@
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const el = document.getElementById('steps-sortable');
+            var sortable = new Sortable(el, {
+                handle: '.handle',
+                animation: 150,
+                onEnd: function(evt) {
+                    var stepOrder = sortable.toArray();
+
+                    console.log('New step order:', stepOrder);
+
+                    fetch('{{ route('scenario.update-step-order', $scenario->id) }}', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            },
+                            body: JSON.stringify({
+                                steps: stepOrder
+                            })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                console.log('Order updated successfully');
+                                // reload the page
+                                window.location.reload();
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                        });
+                }
+            });
+        });
+    </script>
 
 @endsection
