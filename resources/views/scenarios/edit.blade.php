@@ -17,6 +17,15 @@
             </div>
 
             <div class="form-group">
+                <label for="access_code">Toegangscode</label>
+                <input type="text" class="form-control @error('access_code') is-invalid @enderror" id="access_code"
+                    name="access_code" value="{{ old('access_code', $scenario->access_code) }}">
+                @error('access_code')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div class="form-group">
                 <label for="description">Omschrijving</label>
                 <textarea class="form-control @error('description') is-invalid @enderror" id="description" name="description"
                     rows="3" required>{{ old('description', $scenario->description) }}</textarea>
@@ -52,27 +61,11 @@
                 </div>
             </div>
 
-            <div class="form-group" id="access_code_group"
-                style="{{ old('is_public', $scenario->is_public) ? 'display:none;' : '' }}">
-                <label for="access_code">Access Code (for private scenarios)</label>
-                <input type="text" class="form-control @error('access_code') is-invalid @enderror" id="access_code"
-                    name="access_code" value="{{ old('access_code', $scenario->access_code) }}">
-                @error('access_code')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
-            </div>
+
 
             <button type="submit" class="btn btn-primary">Update Scenario</button>
             <a href="{{ route('scenarios.show', $scenario) }}" class="btn btn-secondary">Cancel</a>
         </form>
     </div>
 
-    @push('scripts')
-        <script>
-            document.getElementById('is_public').addEventListener('change', function() {
-                var accessCodeGroup = document.getElementById('access_code_group');
-                accessCodeGroup.style.display = this.checked ? 'none' : 'block';
-            });
-        </script>
-    @endpush
 @endsection

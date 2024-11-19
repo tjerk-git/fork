@@ -9,14 +9,14 @@
         <table class="table table-bordered">
             <tr>
                 <th>Status</th>
-                <td>{{ $scenario->is_public ? 'Publiek' : 'Prive' }}</td>
+                <td>{{ $scenario->is_public ? 'Gepubliceerd' : 'Prive' }}</td>
             </tr>
-            @if (!$scenario->is_public)
-                <tr>
-                    <th>Toegangscode</th>
-                    <td>{{ $scenario->access_code }}</td>
-                </tr>
-            @endif
+
+            <tr>
+                <th>Toegangscode</th>
+                <td>{{ $scenario->access_code }}</td>
+            </tr>
+
             <tr>
                 <th>Publieke URL</th>
                 <td>{{ $scenario->slug }}</td>
@@ -78,7 +78,6 @@
                     @foreach ($scenario->steps()->orderBy('order')->get() as $step)
                         <tr data-id="{{ $step->id }}">
                             <td class="handle" style="cursor: move;">&#9776;</td>
-                            <td>{{ $loop->iteration }}</td>
 
                             <td>
                                 @if (!empty($step->open_question))
@@ -89,7 +88,7 @@
                             </td>
                             <td>
                                 <a href="{{ route('steps.edit', ['step' => $step->id, 'scenario' => $scenario->id]) }}"
-                                    class="btn btn-primary btn-sm">Aanpassen</a>
+                                    class="btn btn-primary btn-sm">✏️</a>
 
                                 <form
                                     action="{{ route('steps.destroy', ['step' => $step->id, 'scenario' => $scenario->id]) }}"
