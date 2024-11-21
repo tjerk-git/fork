@@ -26,24 +26,72 @@
     }
 </style>
 
+<div class="container">
+    @section('content')
+        <form method="POST" action="{{ route('results.store') }}">
+            <input type="hidden" name="scenario_id" value="{{ $scenario->id }}">
+            @csrf
 
-@section('content')
-    <form>
-        @foreach ($scenario->steps()->orderBy('order')->get() as $index => $step)
-            <section data-uuid="{{ $step->order }}">
-                <h1>Step {{ $step->order }}:</h1>
+            @foreach ($scenario->steps()->orderBy('order')->get() as $index => $step)
+                <section data-uuid="{{ $step->order }}">
+                    <h1>Step {{ $step->order }}:</h1>
 
-                @if ($step->question_type === 'open')
-                    <p>{{ $step->open_question }}</p>
-                @else
-                    <p>{{ $step->multiple_choice_question }}</p>
+                    @if ($step->attachment)
+                        @php
+                            $fileExtension = pathinfo($step->attachment, PATHINFO_EXTENSION);
+                        @endphp
+                        @if ($fileExtension == 'mp4')
+                            <video controls class="img-fluid">
+                                <source src="{{ Storage::url($step->attachment) }}" type="video/{{ $fileExtension }}">
+                                Your browser does not support the video tag.
+                            </video>
+                        @else
+                            <img src="{{ asset('storage/' . $step->attachment) }}" alt="Uploaded Image">
+                        @endif
+                    @endif
+
+
+                    @if ($step->question_type == 'open_question')
+                        <div class="form-group" id="open_question_div">
+                            <h2>{{ $step->open_question }}</h2>
+
+                            <label for="answer_{{ $step->id }}">Antwoord</label>
+                            <input type="text" class="form-control" id="answer_{{ $step->id }}"
+                                name="answer_{{ $step->id }}" value="" placeholder="Antwoord">
+                        </div>
+                    @elseif ($step->question_type == 'multiple_choice_question')
+                        <div class="form-group" id="multiple_c">
+                            <h2>{{ $step->multiple_choice_question }}</h2>
+
+                            <label for="answer_{{ $step->id }}_1">{{ $step->multiple_choice_option_1 }}</label>
+                            <input type="radio" id="answer_{{ $step->id }}_1" name="answer_{{ $step->id }}"
+                                value="{{ $step->multiple_choice_option_1 }}">
+                            <label for="answer_{{ $step->id }}_2">{{ $step->multiple_choice_option_2 }}</label>
+                            <input type="radio" id="answer_{{ $step->id }}_2" name="answer_{{ $step->id }}"
+                                value="{{ $step->multiple_choice_option_2 }}">
+                            <label for="answer_{{ $step->id }}_3">{{ $step->multiple_choice_option_3 }}</label>
+                            <input type="radio" id="answer_{{ $step->id }}_3" name="answer_{{ $step->id }}"
+                                value="{{ $step->multiple_choice_option_3 }}">
+
+                        </div>
+                    @endif
+                </section>
+
+
+                @if ($loop->last)
+                    <section data-uuid="{{ $step->order + 1 }}">
+                        <h1>Results</h1>
+                        <button type="submit">Opslaan</button>
+                    </section>
                 @endif
-            </section>
-        @endforeach
-        <button id="prev">Previous</button>
-        <button id="next">Next</button>
-    </form>
-@endsection
+            @endforeach
+
+
+            <button id="prev">Previous</button>
+            <button id="next">Next</button>
+        </form>
+    @endsection
+</div>
 
 
 <script>

@@ -4,12 +4,13 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ScenarioController;
 use App\Http\Controllers\StepController;
+use App\Http\Controllers\ResultsController;
 
 Route::get('/debug', function () {
     return app('App\Http\Controllers\DebugController')->index();
 })->middleware('auth');
 
-Route::resource('scenarios', ScenarioController::class);
+Route::resource('scenarios', ScenarioController::class)->middleware('auth');
 
 Route::get('/scenarios/{scenario}/steps/create', [StepController::class, 'create'])->name('steps.create');
 Route::post('/scenarios/{scenario}/steps', [StepController::class, 'store'])->name('steps.store');
@@ -40,9 +41,14 @@ Route::get('/results', function () {
     return app('App\Http\Controllers\DebugController')->results();
 });
 
+
+// post to results controller to store the results
+Route::post('/results', [ResultsController::class, 'store'])->name('results.store');
+
 Route::get('/', function () {
-    return app('App\Http\Controllers\AuthController')->showLogin();
-});
+   // get the debug controller index method
+    return app('App\Http\Controllers\ScenarioController')->index();
+})->middleware('auth');
 
 
 Route::group(['middleware' => ['guest']], function() {
