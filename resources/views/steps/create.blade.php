@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="container">
-        <h1>New Step for {{ $scenario->name }}</h1>
+        <h1>Nieuwe vraag voor: {{ $scenario->name }}</h1>
 
         <div class="form-group">
             <label for="question_type">Vraag:</label>
@@ -18,14 +18,7 @@
         <form action="{{ route('steps.store', ['scenario' => $scenario->id]) }}" method="POST"
             enctype="multipart/form-data">
             @csrf
-            <div class="form-group" id="attachment" style="display:none;">
-                <label for="attachment">Video of afbeelding</label>
-                <input type="file" class="form-control-file @error('attachment') is-invalid @enderror" id="attachment"
-                    name="attachment">
-                @error('attachment')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
-            </div>
+    
 
 
             <div class="form-group" id="open_question_div" style="display:none;">
@@ -60,6 +53,15 @@
                 <button type="button" class="btn btn-link" id="show_attachment">
                     <i class="fas fa-plus"></i> Voeg een video of afbeelding toe
                 </button>
+
+                <div class="form-group" id="attachment" style="display:none;">
+                <label for="attachment">Video of afbeelding</label>
+                <input type="file" class="form-control-file @error('attachment') is-invalid @enderror" id="attachment"
+                    name="attachment">
+                @error('attachment')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
             </div>
 
             {{-- @if ($scenario->steps->count() > 0)

@@ -5,9 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Scenario;
-use App\Models\Component;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Models\ResultLine;
 
 class Step extends Model
 {
@@ -32,5 +32,10 @@ class Step extends Model
     public function scenario()
     {
         return $this->belongsTo(Scenario::class);
+    }
+
+    public function resultLines(): HasMany
+    {
+        return $this->hasMany(ResultLine::class);
     }
 }

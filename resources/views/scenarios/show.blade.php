@@ -43,27 +43,6 @@
         </table>
 
 
-        <div class="card mb-4">
-            <div class="card-body">
-
-
-                @if ($scenario->attachment)
-                    @php
-                        $fileExtension = pathinfo($scenario->attachment, PATHINFO_EXTENSION);
-                    @endphp
-                    @if ($fileExtension == 'mp4')
-                        <video controls class="img-fluid">
-                            <source src="{{ Storage::url($scenario->attachment) }}" type="video/{{ $fileExtension }}">
-                            Your browser does not support the video tag.
-                        </video>
-                    @else
-                        <img src="{{ asset('storage/' . $scenario->attachment) }}" alt="Uploaded Image">
-                    @endif
-                @endif
-
-            </div>
-        </div>
-
         <h2>Vragen:</h2>
         @if ($scenario->steps->count() > 0)
             <table class="table table-bordered mb-4">
@@ -78,27 +57,29 @@
                     @foreach ($scenario->steps()->orderBy('order')->get() as $step)
                         <tr data-id="{{ $step->id }}">
                             <td class="handle" style="cursor: move;">&#9776;</td>
-
+                            {{$step->question_type}}
                             <td>
                                 @if ($step->question_type == 'intro')
                                     <strong>Introductie:</strong> {{ $step->description }}
                                 @elseif ($step->question_type == 'open_question')
-                                    <strong>Open vraag:</strong> {{ $step->description }}
-                                @elseif ($step->question_type == 'multiple_c')
-                                    <strong>Meerkeuze vraag:</strong> {{ $step->description }}
+                                    <strong>Open vraag:</strong> {{ $step->open_question }}
+                                @elseif ($step->question_type == 'multiple_choice_question')
+                                    <strong>Meerkeuze vraag:</strong> {{ $step->multiple_choice_question }}
                                 @endif
                             </td>
                             <td>
-                                <a href="{{ route('steps.edit', ['step' => $step->id, 'scenario' => $scenario->id]) }}"
-                                    role="button" class="btn btn-primary btn-sm outline">Bewerken</a>
+                        <a href="{{ route('steps.edit', ['step' => $step->id, 'scenario' => $scenario->id]) }}" class="outline">
+                            <i class="fas fa-pencil"></i> Bewerken
+                        </a>
 
                                 <form
                                     action="{{ route('steps.destroy', ['step' => $step->id, 'scenario' => $scenario->id]) }}"
                                     method="POST" style="display: inline-block;">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm outline secondary"
-                                        onclick="return confirm('Weet je zeker dat je deze vraag wilt verwijderen?')">Verwijderen</button>
+                             <button type="submit" class="btn btn-danger btn-sm outline secondary" onclick="return confirm('Weet je zeker dat je deze vraag wilt verwijderen?')">
+                                 <i class="fas fa-trash"></i> Verwijderen
+                             </button>
                                 </form>
                             </td>
                         </tr>
@@ -109,26 +90,16 @@
             <p>Geen vragen toegevoegd..</p>
         @endif
 
-        <a href="{{ route('steps.create', ['scenario' => $scenario->id]) }}" class="outline" role="button">Voeg een vraag
-            toe +</a>
+        <a href="{{ route('steps.create', ['scenario' => $scenario->id]) }}" class="outline" role="button">
+            <i class="fas fa-plus"></i> Voeg een vraag toe
+        </a>
 
-     
+        <br><br>
+
+        <a href="{{ route('scenarios.index') }}" class="btn btn-secondary" role="button">Terug naar alle scenarios</a>
         </div>
 
-        <div class="mt-4">
-            @can('update', $scenario)
-                <a href="{{ route('scenarios.edit', $scenario) }}" class="btn btn-primary">Edit Scenario</a>
-            @endcan
-            @can('delete', $scenario)
-                <form action="{{ route('scenarios.destroy', $scenario) }}" method="POST" style="display: inline-block;">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="btn btn-danger"
-                        onclick="return confirm('Are you sure you want to delete this scenario?')">Delete Scenario</button>
-                </form>
-            @endcan
-            <a href="{{ route('scenarios.index') }}" class="btn btn-secondary">Terug naar alle scenarios</a>
-        </div>
+       
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>

@@ -65,9 +65,13 @@ class StepController extends Controller
             $validatedData['attachment']= $filename;
         }
 
+        // get the last step order
+        $lastStepOrder = Step::where('scenario_id', $request->scenario_id)->max('order');
+        $stepOrder = $lastStepOrder + 1;
+
         // create the step
         $step = Step::create([
-            'order' => 0,
+            'order' => $stepOrder,
             'description' => $request->description,
             'fork_to_step' => $request->fork_to_step,
             'scenario_id' => $request->scenario_id,

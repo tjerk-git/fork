@@ -19,7 +19,7 @@
         <thead>
             <tr>
                 <th scope="col">Naam</th>
-                <th scope="col">Beschrijving</th>
+                <th scope="col">Gepubliceerd?</th>
                 <th scope="col">Aangemaakt op</th>
                 <th scope="col">Acties</th>
             </tr>
@@ -28,12 +28,18 @@
             @foreach ($scenarios as $scenario)
                 <tr class="scenario-row">
                     <td data-name="{{ strtolower($scenario->name) }}">{{ $scenario->name }}</td>
-                    <td>{{ Str::limit($scenario->description, 100) }}</td>
+                    <td>
+                        @if($scenario->is_public)
+                            <i class="fas fa-eye" style="color: var(--pico-primary)"></i>
+                        @else
+                            <i class="fas fa-eye-slash" style="color: var(--pico-muted-color)"></i>
+                        @endif
+                    </td>
                     <td data-date="{{ $scenario->created_at->format('Y-m-d') }}">
                         {{ $scenario->created_at->format('d-m-Y') }}
                     </td>
                     <td>
-                        <a href="{{ route('scenarios.show', $scenario) }}" role="button" class="outline">Bekijken</a>
+                        <a href="{{ route('scenarios.show', $scenario) }}" role="button" class="outline">  <i class="fas fa-eye" style="color: var(--pico-primary)"></i> Bekijken</a>
                     </td>
                 </tr>
             @endforeach
