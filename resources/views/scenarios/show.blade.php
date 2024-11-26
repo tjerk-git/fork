@@ -12,40 +12,40 @@
                 <td>{{ $scenario->is_public ? 'Gepubliceerd' : 'Prive' }}</td>
             </tr>
 
-            <tr>
-                <th>Toegangscode</th>
-                <td>{{ $scenario->access_code }}</td>
-            </tr>
+            @if ($scenario->access_code)
+                <tr>
+                    <th>Toegangscode</th>
+                    <td>{{ $scenario->access_code }}</td>
+                </tr>
+            @endif
 
             <tr>
                 <th>Publieke URL</th>
-                <td>{{ $scenario->slug }}</td>
-            </tr>
-
-            <tr>
-                <th>Bewerken</th>
-                <td><a href="{{ route('scenarios.edit', $scenario) }}" class="btn btn-primary">Scenario wijzigen</a></td>
-            </tr>
-
-            <tr>
-                <th>Verwijderen</th>
                 <td>
+                    <a
+                        href="{{ url('/scenarios/start/' . $scenario->slug) }}">{{ url('/scenarios/start/' . $scenario->slug) }}</a>
+                </td>
+            </tr>
+
+            <tr>
+                <th>Acties</th>
+                <td> <a href="{{ route('scenarios.edit', $scenario) }}" role="button" class="outline">Bewerken</a>
+
                     <form action="{{ route('scenarios.destroy', $scenario) }}" method="POST" style="display: inline-block;">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="btn btn-danger"
-                            onclick="return confirm('Weet je zeker dat je dit scenario wilt verwijderen?')">Scenario
-                            verwijderen</button>
+                        <button type="submit" class="btn btn-danger secondary outline"
+                            onclick="return confirm('Weet je zeker dat je dit scenario wilt verwijderen?')">Verwijderen</button>
                     </form>
                 </td>
             </tr>
+
         </table>
 
 
         <div class="card mb-4">
             <div class="card-body">
-                <h5 class="card-title">Omschrijving</h5>
-                <p class="card-text">{{ $scenario->description }}</p>
+
 
                 @if ($scenario->attachment)
                     @php
@@ -80,22 +80,24 @@
                             <td class="handle" style="cursor: move;">&#9776;</td>
 
                             <td>
-                                @if (!empty($step->open_question))
-                                    Open vraag: {{ Str::limit($step->open_question, 100) }}
-                                @else
-                                    Meerkeuze vraag: {{ Str::limit($step->multiple_choice_question, 100) }}
+                                @if ($step->question_type == 'intro')
+                                    <strong>Introductie:</strong> {{ $step->description }}
+                                @elseif ($step->question_type == 'open_question')
+                                    <strong>Open vraag:</strong> {{ $step->description }}
+                                @elseif ($step->question_type == 'multiple_c')
+                                    <strong>Meerkeuze vraag:</strong> {{ $step->description }}
                                 @endif
                             </td>
                             <td>
                                 <a href="{{ route('steps.edit', ['step' => $step->id, 'scenario' => $scenario->id]) }}"
-                                    class="btn btn-primary btn-sm">✏️</a>
+                                    role="button" class="btn btn-primary btn-sm outline">Bewerken</a>
 
                                 <form
                                     action="{{ route('steps.destroy', ['step' => $step->id, 'scenario' => $scenario->id]) }}"
                                     method="POST" style="display: inline-block;">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm outline"
+                                    <button type="submit" class="btn btn-danger btn-sm outline secondary"
                                         onclick="return confirm('Weet je zeker dat je deze vraag wilt verwijderen?')">Verwijderen</button>
                                 </form>
                             </td>
@@ -107,9 +109,11 @@
             <p>Geen vragen toegevoegd..</p>
         @endif
 
-        <a href="{{ route('steps.create', ['scenario' => $scenario->id]) }}" class="outline">Voeg een vraag toe +</a>
+        <a href="{{ route('steps.create', ['scenario' => $scenario->id]) }}" class="outline" role="button">Voeg een vraag
+            toe +</a>
 
-        <h2>Resultaten</h2>
+     
+        </div>
 
         <div class="mt-4">
             @can('update', $scenario)
@@ -137,7 +141,6 @@
                 onEnd: function(evt) {
                     var stepOrder = sortable.toArray();
 
-                    console.log('New step order:', stepOrder);
 
                     fetch('{{ route('scenario.update-step-order', $scenario->id) }}', {
                             method: 'POST',

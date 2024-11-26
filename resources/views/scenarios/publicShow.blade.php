@@ -34,28 +34,17 @@
 
             @foreach ($scenario->steps()->orderBy('order')->get() as $index => $step)
                 <section data-uuid="{{ $step->order }}">
-                    <h1>Step {{ $step->order }}:</h1>
+                    <h1>{{ $scenario->name }}</h1>
 
-                    @if ($step->attachment)
-                        @php
-                            $fileExtension = pathinfo($step->attachment, PATHINFO_EXTENSION);
-                        @endphp
-                        @if ($fileExtension == 'mp4')
-                            <video controls class="img-fluid">
-                                <source src="{{ Storage::url($step->attachment) }}" type="video/{{ $fileExtension }}">
-                                Your browser does not support the video tag.
-                            </video>
-                        @else
-                            <img src="{{ asset('storage/' . $step->attachment) }}" alt="Uploaded Image">
-                        @endif
-                    @endif
+                    @if ($step->question_type == 'intro')
+                    
+                    @include('partials.attachment')
 
+                    <p>{{ $step->description }}</p>    
 
-                    @if ($step->question_type == 'open_question')
+                    @elseif ($step->question_type == 'open_question')
                         <div class="form-group" id="open_question_div">
-                            <h2>{{ $step->open_question }}</h2>
-
-                            <label for="answer_{{ $step->id }}">Antwoord</label>
+                            <label for="answer_{{ $step->id }}">{{ $step->open_question }}</label>
                             <input type="text" class="form-control" id="answer_{{ $step->id }}"
                                 name="answer_{{ $step->id }}" value="" placeholder="Antwoord">
                         </div>
@@ -72,7 +61,6 @@
                             <label for="answer_{{ $step->id }}_3">{{ $step->multiple_choice_option_3 }}</label>
                             <input type="radio" id="answer_{{ $step->id }}_3" name="answer_{{ $step->id }}"
                                 value="{{ $step->multiple_choice_option_3 }}">
-
                         </div>
                     @endif
                 </section>
@@ -87,8 +75,8 @@
             @endforeach
 
 
-            <button id="prev">Previous</button>
-            <button id="next">Next</button>
+            <button id="prev">Vorige stap</button>
+            <button id="next">Volgende stap</button>
         </form>
     @endsection
 </div>

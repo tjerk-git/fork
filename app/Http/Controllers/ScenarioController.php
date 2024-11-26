@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 use App\Models\Step;
 
 class ScenarioController extends Controller
+
 {
     public function index()
     {
@@ -30,21 +31,22 @@ class ScenarioController extends Controller
     {
         $validatedData = $request->validate([
             'name' => 'required|max:255',
-            'description' => 'required',
-            'attachment' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg,mp4,mov,avi,wmv|max:204800', // 200MB max, allow images and video files
             'is_public' => 'boolean',
             'access_code' => 'nullable|string|min:6|max:20',
         ]);
 
 
         $validatedData['user_id'] = auth()->id();
-        $validatedData['slug'] = Str::slug($validatedData['name']);
-
-        if ($request->hasFile('attachment')) {
-            $validatedData['attachment'] = $request->file('attachment')->store('scenario-attachments', 'public');
-        }
-
+   
         $scenario = Scenario::create($validatedData);
+
+        // create a first step for this scenario
+        $step = new Step();
+        $step->question_type ='intro';
+        $step->description = 'Dit is de introductie van het scenario';
+        $step->order = 0;
+        $step->scenario_id = $scenario->id;
+        $step->save();
 
         return redirect()->route('scenarios.show', $scenario)->with('success', 'Scenario created successfully');
     }
@@ -53,6 +55,7 @@ class ScenarioController extends Controller
     {
 
         return view('scenarios.edit', compact('scenario'));
+        
     }
 
     public function updateStepOrder(Request $request, Scenario $scenario)
@@ -75,28 +78,17 @@ class ScenarioController extends Controller
 
         $validatedData = $request->validate([
             'name' => 'required|max:255',
-            'description' => 'required',
-            'attachment' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg,mp4,mov,avi,wmv|max:204800', // 200MB max, allow images and video files
             'is_public' => 'boolean',
             'access_code' => 'nullable|string|min:4|max:20',
         ]);
-
-
-        $validatedData['slug'] = Str::slug($validatedData['name']);
-
-        if ($request->hasFile('attachment')) {
-            $validatedData['attachment'] = $request->file('attachment')->store('scenario-attachments', 'public');
-        }
-
     
-        $scenario->update(array_filter($validatedData));
+        $scenario->update($validatedData);
 
         return redirect()->route('scenarios.show', $scenario)->with('success', 'Scenario updated successfully');
     }
 
     public function destroy(Scenario $scenario)
     {
-        $this->authorize('delete', $scenario);
         $scenario->delete();
         return redirect()->route('scenarios.index')->with('success', 'Scenario deleted successfully');
     }
@@ -105,9 +97,9 @@ class ScenarioController extends Controller
     {
         $scenario = Scenario::whereSlug($slug)->firstOrFail();
 
-        // if not public redirect to 404
+        // if not public redirect to notPublic view
         if (!$scenario->is_public) {
-            abort(404);
+            return view('scenarios.notPublic');
         }
 
         // if this scenario has an access code redirect to access code page

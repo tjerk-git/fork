@@ -2,92 +2,101 @@
 
 @section('title', 'Scenarios')
 
+@section('content')
+<div class="headings">
+    <h1>Scenarios</h1>
+    <a href="{{ route('scenarios.create') }}" role="button" class="primary">Nieuw scenario</a>
+</div>
+
+<div class="filters" style="margin-bottom: 1rem;">
+    <input type="search" id="scenarioSearch" placeholder="Zoek op naam..." style="margin-bottom: 1rem;">
+    <input type="date" id="dateFilter" style="margin-bottom: 1rem;">
+    <button onclick="resetFilters()" class="outline">Reset filters</button>
+</div>
+
+<div class="table-container" style="overflow-x: auto;">
+    <table role="grid">
+        <thead>
+            <tr>
+                <th scope="col">Naam</th>
+                <th scope="col">Beschrijving</th>
+                <th scope="col">Aangemaakt op</th>
+                <th scope="col">Acties</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($scenarios as $scenario)
+                <tr class="scenario-row">
+                    <td data-name="{{ strtolower($scenario->name) }}">{{ $scenario->name }}</td>
+                    <td>{{ Str::limit($scenario->description, 100) }}</td>
+                    <td data-date="{{ $scenario->created_at->format('Y-m-d') }}">
+                        {{ $scenario->created_at->format('d-m-Y') }}
+                    </td>
+                    <td>
+                        <a href="{{ route('scenarios.show', $scenario) }}" role="button" class="outline">Bekijken</a>
+                    </td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
+</div>
+
+@if ($scenarios->isEmpty())
+    <p>Je hebt nog geen scenario's gemaakt</p>
+@endif
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('scenarioSearch');
+    const dateFilter = document.getElementById('dateFilter');
+    const rows = document.querySelectorAll('.scenario-row');
+
+    function filterTable() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const selectedDate = dateFilter.value;
+
+        rows.forEach(row => {
+            const name = row.querySelector('td[data-name]').dataset.name;
+            const date = row.querySelector('td[data-date]').dataset.date;
+            
+            const matchesSearch = name.includes(searchTerm);
+            const matchesDate = !selectedDate || date === selectedDate;
+
+            row.style.display = matchesSearch && matchesDate ? '' : 'none';
+        });
+    }
+
+    searchInput.addEventListener('input', filterTable);
+    dateFilter.addEventListener('change', filterTable);
+});
+
+function resetFilters() {
+    document.getElementById('scenarioSearch').value = '';
+    document.getElementById('dateFilter').value = '';
+    document.querySelectorAll('.scenario-row').forEach(row => {
+        row.style.display = '';
+    });
+}
+</script>
 
 <style>
-    .scenarios-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-        gap: 1rem;
-        padding: 1rem 0;
-    }
+.headings {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
 
-    .scenario-card {
-        display: flex;
-        flex-direction: column;
-        height: 250px;
-        border: 1px solid var(--primary);
-        border-radius: 8px;
-        overflow: hidden;
-        transition: transform 0.2s ease-in-out;
-    }
+.filters {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
 
-    .scenario-card:hover {
-        transform: translateY(-5px);
+@media (min-width: 768px) {
+    .filters {
+        grid-template-columns: 1fr 1fr auto;
     }
-
-    .scenario-card header {
-        background-color: var(--primary);
-        color: var(--primary-inverse);
-        padding: 0.5rem;
-        font-weight: bold;
-    }
-
-    .scenario-card .content {
-        flex-grow: 1;
-        padding: 0.5rem;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .scenario-card .description {
-        flex-grow: 1;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        display: -webkit-box;
-        -webkit-line-clamp: 3;
-        -webkit-box-orient: vertical;
-    }
-
-    .scenario-card footer {
-        padding: 0.5rem;
-        background-color: var(--secondary-background);
-        font-size: 0.8rem;
-    }
-
-    .scenario-card .actions {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 0.5rem;
-    }
+}
 </style>
-
-
-@section('content')
-    <div class="container">
-        <h1>Scenarios</h1>
-
-        <div class="scenarios-grid">
-            @foreach ($scenarios as $scenario)
-                <article class="scenario-card">
-                    <header>{{ $scenario->name }}</header>
-                    <div class="content">
-                        <p class="description">{{ $scenario->description }}</p>
-                        <div class="actions">
-                            <a href="{{ route('scenarios.show', $scenario) }}" role="button" class="outline">Bekijken</a>
-
-                        </div>
-                    </div>
-                    <footer>
-                        <span>{{ $scenario->is_public ? 'Public' : 'Private' }}</span>
-                        <span>By {{ $scenario->user->name }}</span>
-                    </footer>
-                </article>
-            @endforeach
-        </div>
-
-
-
-        <a href="{{ route('scenarios.create') }}" role="button" class="secondary">Maak een nieuw scenarioh</a>
-
-    </div>
 @endsection

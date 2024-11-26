@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('body')->nullable();
             $table->string('attachment')->nullable();
             $table->string('slug');
-            $table->string('access_code');
+            $table->string('access_code')->nullable();
             $table->boolean('is_public')->default(false);
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();

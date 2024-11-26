@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Step;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 
 class Scenario extends Model
@@ -42,6 +43,16 @@ class Scenario extends Model
         });
 
         static::creating(function ($scenario) {
+            $slug = Str::slug($scenario->name) . '-' . Str::random(8);
+
+            while (Scenario::where('slug', $slug)->exists()) {
+            $slug = Str::slug($scenario->name) . '-' . Str::random(8);
+            }
+
+            $scenario->slug = $slug;
+        });
+
+        static::updating(function ($scenario) {
             $slug = Str::slug($scenario->name) . '-' . Str::random(8);
 
             while (Scenario::where('slug', $slug)->exists()) {

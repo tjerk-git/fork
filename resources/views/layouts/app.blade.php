@@ -23,10 +23,47 @@
             @endif
         </div>
     </header>
-    <main class="container">
-        @yield('content')
-    </main>
+   
+    <div class="layout">
+        <aside class="sidebar">
+            <nav>
+                <ul>
+                    <li><a href="{{ route('scenarios.index') }}" class="{{ request()->routeIs('scenarios.index') ? 'secondary' : '' }}">Scenarios</a></li>
+                  <li><a href="{{ route('results.index') }}" class="{{ request()->routeIs('results.*') ? 'secondary' : '' }}">Resultaten</a></li>
+                </ul>
+            </nav>
+        </aside>
+        <main class="main-content">
+            @yield('content')
+        </main>
+    </div>
 
+    <style>
+        .layout {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            min-height: calc(100vh - 80px);
+        }
+        .sidebar {
+            padding: 20px;
+            border-right: 1px solid var(--pico-muted-border-color);
+            background: var(--pico-background-alt);
+        }
+        .main-content {
+            padding: 20px;
+            background: var(--pico-background);
+            overflow-x: auto;
+        }
+        @media (max-width: 768px) {
+            .layout {
+                grid-template-columns: 1fr;
+            }
+            .sidebar {
+                display: none;
+            }
+        }
+    </style>
+   
 </body>
 
 </html>

@@ -13,6 +13,11 @@ Route::get('/debug', function () {
 Route::resource('scenarios', ScenarioController::class)->middleware('auth');
 
 Route::get('/scenarios/{scenario}/steps/create', [StepController::class, 'create'])->name('steps.create');
+
+Route::get('/results', [ResultsController::class, 'index'])->name('results.index');
+
+Route::get('/results/{scenario}', [ResultsController::class, 'show'])->name('results.show');
+
 Route::post('/scenarios/{scenario}/steps', [StepController::class, 'store'])->name('steps.store');
 
 Route::get('/scenarios/{scenario}/steps/{step}/edit', [StepController::class, 'edit'])->name('steps.edit');
@@ -35,11 +40,6 @@ Route::post('/scenarios/start/{slug}', [ScenarioController::class, 'verifyAccess
 
 Route::post('/scenario/{scenario}/update-step-order', [ScenarioController::class, 'updateStepOrder'])
     ->name('scenario.update-step-order');
-
-Route::get('/results', function () {
-   // get the debug controller index method
-    return app('App\Http\Controllers\DebugController')->results();
-});
 
 
 // post to results controller to store the results

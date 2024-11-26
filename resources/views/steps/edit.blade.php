@@ -2,7 +2,15 @@
 
 @section('content')
     <div class="container">
-        <h1>Een vraag voor {{ $scenario->name }}</h1>
+
+    
+       <h1>
+           @if ($step->question_type === 'intro')
+               Introductie voor {{ $scenario->name }}
+           @else
+               Een vraag voor {{ $scenario->name }}
+           @endif
+       </h1>
 
         <form action="{{ route('steps.update', ['step' => $step->id, 'scenario' => $scenario->id]) }}" method="POST"
             enctype="multipart/form-data">
@@ -11,19 +19,7 @@
 
 
 
-            @if ($step->attachment)
-                @php
-                    $fileExtension = pathinfo($step->attachment, PATHINFO_EXTENSION);
-                @endphp
-                @if ($fileExtension == 'mp4')
-                    <video controls class="img-fluid">
-                        <source src="{{ Storage::url($step->attachment) }}" type="video/{{ $fileExtension }}">
-                        Your browser does not support the video tag.
-                    </video>
-                @else
-                    <img src="{{ asset('storage/' . $step->attachment) }}" alt="Uploaded Image">
-                @endif
-            @endif
+            @include('partials.attachment')
 
             <div class="form-group" id="attachment">
                 <label for="attachment">Video of afbeelding aanpassen</label>
@@ -31,6 +27,15 @@
                     name="attachment">
                 @error('attachment')
                     <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div class="form-group">
+                <label for="content">Omschrijving</label>
+                <textarea class="form-control @error('content') is-invalid @enderror" id="description" name="description"
+                    rows="3">{{ $step->description }}</textarea>
+                @error('description')
+                    <div class="invalid-feedback">{{ $description }}</div>
                 @enderror
             </div>
 

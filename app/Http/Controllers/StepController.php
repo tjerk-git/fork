@@ -34,10 +34,14 @@ class StepController extends Controller
     {
 
         $validatedData = $request->validate([
-            'attachment' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg,mp4,mov,avi,wmv|max:204800', // 200MB max, allow images and video files
+            'attachment' => 'nullable|file|mimes:jpeg,png,jpg,gif,mp4|max:204800', // 200MB max, allow images and video files
         ]);
-        if ($request->hasFile('attachment')) {
-            $validatedData['attachment'] = $request->file('attachment')->store('scenario-attachments', 'public');
+
+        if($request->file('attachment')){
+            $file= $request->file('attachment');
+            $filename= date('YmdHi').$file->getClientOriginalName();
+            $file-> move(public_path('public/images/'), $filename);
+            $validatedData['attachment']= $filename;
         }
 
         // update using the validated data remove empty fields
@@ -50,9 +54,15 @@ class StepController extends Controller
     // store the step
     public function store(Request $request)
     {
+        $validatedData = $request->validate([
+            'attachment' => 'nullable|file|mimes:jpeg,png,jpg,gif,mp4|max:204800',
+        ]);
 
-        if ($request->hasFile('attachment')) {
-            $validatedData['attachment'] = $request->file('attachment')->store('scenario-attachments', 'public');
+        if($request->file('attachment')){
+            $file= $request->file('attachment');
+            $filename= date('YmdHi').$file->getClientOriginalName();
+            $file-> move(public_path('public/images/'), $filename);
+            $validatedData['attachment']= $filename;
         }
 
         // create the step
@@ -61,7 +71,7 @@ class StepController extends Controller
             'description' => $request->description,
             'fork_to_step' => $request->fork_to_step,
             'scenario_id' => $request->scenario_id,
-            'attachment' => $request->attachment,
+            'attachment' =>  $validatedData['attachment'],
             'open_question' => $request->open_question,
             'question_type' => $request->question_type,
             'multiple_choice_question' => $request->multiple_choice_question,
