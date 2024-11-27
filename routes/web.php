@@ -34,6 +34,8 @@ Route::middleware(['auth'])->group(function () {
     // Results
     Route::get('/results', [ResultsController::class, 'index'])->name('results.index');
     Route::get('/results/{scenario}', [ResultsController::class, 'show'])->name('results.show');
+
+    Route::get('/scenarios/{scenario}/results/csv', [ResultsController::class, 'createCSV'])->name('results.csv');
 });
 
 // Public routes

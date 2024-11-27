@@ -16,6 +16,9 @@
             </div>
         @endforeach
 
+        <a href="{{ route('results.csv', ['scenario' => $scenario->id]) }}" role="button" class="outline">
+    <i class="fas fa-download"></i> Download resultaten (CSV)
+</a>
 
         <div class="table-responsive">
             <table role="grid">

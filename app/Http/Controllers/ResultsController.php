@@ -8,6 +8,9 @@ use Illuminate\Support\Str;
 use App\Models\Step;
 use App\Models\Result;
 use App\Models\ResultLine;
+use League\Csv\Writer;
+use SplTempFileObject;
+
 
 class ResultsController extends Controller
 {
@@ -60,4 +63,48 @@ class ResultsController extends Controller
         return view('results.show', compact('scenario'));
     }
 
+
+public function createCSV(Scenario $scenario)
+{
+    // Load the scenario with its steps and results with their lines
+    $scenario->load(['steps', 'results.lines.step']);
+    
+    // Create CSV writer
+    $csv = Writer::createFromFileObject(new SplTempFileObject());
+    $csv->setOutputBOM(Writer::BOM_UTF8);
+    
+    // Create header row
+    $headerRow = ['Timestamp', 'IP Address', 'Vraag', 'Antwoord'];
+    $csv->insertOne($headerRow);
+    
+    // Insert results
+    foreach ($scenario->results as $result) {
+        foreach ($result->lines as $line) {
+            $row = [
+                $result->created_at->format('d-m-Y H:i'),
+                $result->ip,
+                // Get the appropriate question text based on type
+                match($line->step->question_type) {
+                    'open_question' => strip_tags($line->step->open_question),
+                    'multiple_choice_question' => strip_tags($line->step->multiple_choice_question),
+                    default => strip_tags($line->step->description)
+                },
+                strip_tags($line->value)
+            ];
+            
+            $csv->insertOne($row);
+        }
+    }
+    
+    // Set headers for download
+    $headers = [
+        'Content-Type' => 'text/csv; charset=UTF-8',
+        'Content-Disposition' => sprintf('attachment; filename="%s_results.csv"', $scenario->name),
+        'Pragma' => 'no-cache',
+        'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+        'Expires' => '0'
+    ];
+    
+    return response((string) $csv, 200, $headers);
+}
 }
