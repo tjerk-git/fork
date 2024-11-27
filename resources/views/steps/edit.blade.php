@@ -30,6 +30,7 @@
                 @enderror
             </div>
 
+            @if ($step->question_type == 'intro')
             <div class="form-group">
                 <label for="content">Omschrijving</label>
                 <textarea class="form-control @error('content') is-invalid @enderror" id="description" name="description"
@@ -38,6 +39,7 @@
                     <div class="invalid-feedback">{{ $description }}</div>
                 @enderror
             </div>
+            @endif
 
 
             @if ($step->question_type == 'open_question')

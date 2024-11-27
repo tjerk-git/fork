@@ -4,7 +4,12 @@
 
 @section('content')
     <div class="container">
-        <h1>{{ $scenario->name }}</h1>
+    <div class="headings">
+            <h1>Resultaten voor {{ $scenario->name }}</h1>
+            <a href="{{ route('scenarios.index') }}" role="button" class="outline">
+                <i class="fas fa-arrow-left"></i> Terug naar overzicht
+            </a>
+        </div>
         <h5 class="card-title mt-4">Details</h5>
         <table class="table table-bordered">
             <tr>
@@ -94,9 +99,6 @@
             <i class="fas fa-plus"></i> Voeg een vraag toe
         </a>
 
-        <br><br>
-
-        <a href="{{ route('scenarios.index') }}" class="btn btn-secondary" role="button">Terug naar alle scenarios</a>
         </div>
 
        

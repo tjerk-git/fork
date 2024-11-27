@@ -31,6 +31,11 @@ class ResultsController extends Controller
             // Get the step ID from the answer key (format: answer_X)
             $stepId = substr($key, 7);
 
+            // only create the result line if the value is not null
+            if ($value === null) {
+                continue;
+            }
+
             ResultLine::create([
                 'result_id' => $result->id,
                 'step_id' => $stepId,

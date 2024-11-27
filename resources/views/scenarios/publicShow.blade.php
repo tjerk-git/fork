@@ -1,14 +1,6 @@
 @extends('layouts.front')
 
-
 <style>
-    main {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-    }
-
     section {
         display: none;
         justify-content: center;
@@ -16,18 +8,29 @@
         flex-direction: column;
     }
 
-    h1 {
-        font-size: 2rem;
-        margin-bottom: 1rem;
-    }
-
     .active {
         display: flex;
     }
+
+    .form{
+        border-radius: 10px;
+        border: 1px solid var(--pico-muted-border-color);
+        padding: 3rem;
+        max-width:660px;
+        margin: 0 auto;
+    }
+
+    footer{
+        display: flex;
+        justify-content: space-between;
+        margin-top: 2rem;
+    }
 </style>
 
-<div class="container">
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+
     @section('content')
+    <div class="form">
         <form method="POST" action="{{ route('results.store') }}">
             <input type="hidden" name="scenario_id" value="{{ $scenario->id }}">
             @csrf
@@ -51,16 +54,36 @@
                     @elseif ($step->question_type == 'multiple_choice_question')
                         <div class="form-group" id="multiple_c">
                             <h2>{{ $step->multiple_choice_question }}</h2>
+                            
+                            <fieldset>
+                                <legend>Kies een antwoord</legend>
+                                
+                                <div class="grid">
+                                    <label for="answer_{{ $step->id }}_1">
+                                        <input type="radio" 
+                                               id="answer_{{ $step->id }}_1" 
+                                               name="answer_{{ $step->id }}"
+                                               value="{{ $step->multiple_choice_option_1 }}">
+                                        {{ $step->multiple_choice_option_1 }}
+                                    </label>
 
-                            <label for="answer_{{ $step->id }}_1">{{ $step->multiple_choice_option_1 }}</label>
-                            <input type="radio" id="answer_{{ $step->id }}_1" name="answer_{{ $step->id }}"
-                                value="{{ $step->multiple_choice_option_1 }}">
-                            <label for="answer_{{ $step->id }}_2">{{ $step->multiple_choice_option_2 }}</label>
-                            <input type="radio" id="answer_{{ $step->id }}_2" name="answer_{{ $step->id }}"
-                                value="{{ $step->multiple_choice_option_2 }}">
-                            <label for="answer_{{ $step->id }}_3">{{ $step->multiple_choice_option_3 }}</label>
-                            <input type="radio" id="answer_{{ $step->id }}_3" name="answer_{{ $step->id }}"
-                                value="{{ $step->multiple_choice_option_3 }}">
+                                    <label for="answer_{{ $step->id }}_2">
+                                        <input type="radio" 
+                                               id="answer_{{ $step->id }}_2" 
+                                               name="answer_{{ $step->id }}"
+                                               value="{{ $step->multiple_choice_option_2 }}">
+                                        {{ $step->multiple_choice_option_2 }}
+                                    </label>
+
+                                    <label for="answer_{{ $step->id }}_3">
+                                        <input type="radio" 
+                                               id="answer_{{ $step->id }}_3" 
+                                               name="answer_{{ $step->id }}"
+                                               value="{{ $step->multiple_choice_option_3 }}">
+                                        {{ $step->multiple_choice_option_3 }}
+                                    </label>
+                                </div>
+                            </fieldset>
                         </div>
                     @endif
                 </section>
@@ -68,18 +91,27 @@
 
                 @if ($loop->last)
                     <section data-uuid="{{ $step->order + 1 }}">
-                        <h1>Results</h1>
-                        <button type="submit">Opslaan</button>
+                        <h1>Bedankt voor het deelnemen</h1>
+                        
+                            <p>
+                                🎉 Geweldig gedaan! Je hebt het scenario succesvol afgerond! 🎈
+
+                              
+                            </p>
+               
+                        <button type="submit" onClick="showConfetti()">Gegevens opsturen</button>
                     </section>
                 @endif
             @endforeach
 
-
-            <button id="prev">Vorige stap</button>
-            <button id="next">Volgende stap</button>
+            <footer>
+                <button id="prev">Vorige stap</button>
+                <button id="next">Volgende stap</button>
+            </footer>
         </form>
+        </div>
+
     @endsection
-</div>
 
 
 <script>
@@ -87,12 +119,20 @@
         init();
     });
 
+    function showConfetti() {
+        confetti({
+            particleCount: 100,
+            spread: 70,
+            origin: { y: 0.6 }
+        });
+    }
+
     // maybe put steps into an array so we can have multiple continuation steps.
 
     function skipToStep(step) {
         const finalStep = document.querySelectorAll('form section').length;
 
-        console.log('finding step', step);
+        console.log('skipping to step', step);
         // get the div with uuid step
         const stepContent = document.querySelector(`section[data-uuid="${step}"]`);
 
@@ -112,7 +152,7 @@
         const sections = document.querySelectorAll('form section');
         const finalStep = document.querySelectorAll('form section').length;
 
-        let step = 1;
+        let step = 0;
 
         // get next and previous buttons
         const nextBtn = document.querySelector('#next');
@@ -148,6 +188,7 @@
                 return;
             }
 
+
             if (step == nextStep.dataset.uuid && data_input !== undefined) {
                 data_input_value = document.getElementById(data_input).value;
             }
@@ -179,8 +220,8 @@
             } else {
                 step = step - 1;
 
-                if (step < 1) {
-                    step = 1;
+                if (step < 0) {
+                    step = 0;
                 }
                 skipToStep(step);
             }

@@ -63,6 +63,8 @@ class StepController extends Controller
             $filename= date('YmdHi').$file->getClientOriginalName();
             $file-> move(public_path('public/images/'), $filename);
             $validatedData['attachment']= $filename;
+        }else{
+            $validatedData['attachment'] = null;
         }
 
         // get the last step order

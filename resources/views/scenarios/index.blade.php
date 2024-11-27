@@ -5,7 +5,9 @@
 @section('content')
 <div class="headings">
     <h1>Scenarios</h1>
-    <a href="{{ route('scenarios.create') }}" role="button" class="primary">Nieuw scenario</a>
+    <a href="{{ route('scenarios.create') }}" role="button" class="primary">
+        <i class="fa-solid fa-plus"></i> Nieuw scenario
+    </a>
 </div>
 
 <div class="filters" style="margin-bottom: 1rem;">
