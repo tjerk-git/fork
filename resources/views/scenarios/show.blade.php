@@ -4,7 +4,7 @@
 
 @section('content')
     <div class="container">
-    <div class="headings">
+        <div class="headings">
             <h1>Resultaten voor {{ $scenario->name }}</h1>
             <a href="{{ route('scenarios.index') }}" role="button" class="outline">
                 <i class="fas fa-arrow-left"></i> Terug naar overzicht
@@ -62,7 +62,7 @@
                     @foreach ($scenario->steps()->orderBy('order')->get() as $step)
                         <tr data-id="{{ $step->id }}">
                             <td class="handle" style="cursor: move;">&#9776;</td>
-                            {{$step->question_type}}
+                           
                             <td>
                                 @if ($step->question_type == 'intro')
                                     <strong>Introductie:</strong> {{ $step->description }}

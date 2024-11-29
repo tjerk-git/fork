@@ -41,17 +41,21 @@
 
                     @if ($step->question_type == 'intro')
                     
+                   
                     @include('partials.attachment')
+                    
 
                     <p>{{ $step->description }}</p>    
 
                     @elseif ($step->question_type == 'open_question')
+                        @include('partials.attachment')
                         <div class="form-group" id="open_question_div">
                             <label for="answer_{{ $step->id }}">{{ $step->open_question }}</label>
                             <input type="text" class="form-control" id="answer_{{ $step->id }}"
                                 name="answer_{{ $step->id }}" value="" placeholder="Antwoord">
                         </div>
                     @elseif ($step->question_type == 'multiple_choice_question')
+                        @include('partials.attachment')
                         <div class="form-group" id="multiple_c">
                             <h2>{{ $step->multiple_choice_question }}</h2>
                             
@@ -99,7 +103,7 @@
                               
                             </p>
                
-                        <button type="submit" onClick="showConfetti()">Gegevens opsturen</button>
+                        <button type="submit">Gegevens opsturen</button>
                     </section>
                 @endif
             @endforeach
@@ -132,6 +136,15 @@
     function skipToStep(step) {
         const finalStep = document.querySelectorAll('form section').length;
 
+        if(step == finalStep){
+            showConfetti();
+            document.querySelector('#next').style.display = 'none';
+        }else{
+            document.querySelector('#next').style.display = 'block';
+        }
+
+        console.log('final step', finalStep);
+
         console.log('skipping to step', step);
         // get the div with uuid step
         const stepContent = document.querySelector(`section[data-uuid="${step}"]`);
@@ -152,7 +165,7 @@
         const sections = document.querySelectorAll('form section');
         const finalStep = document.querySelectorAll('form section').length;
 
-        let step = 0;
+        let step = 1;
 
         // get next and previous buttons
         const nextBtn = document.querySelector('#next');

@@ -5,7 +5,7 @@
     @endphp
     
     @if ($isVideo)
-        <video controls style="height: 800px;">
+        <video controls style="height: 300px;">
             <source src="{{ url('public/images/'.$step->attachment) }}" type="video/{{ $fileExtension }}">
             Your browser does not support the video tag.
         </video>
