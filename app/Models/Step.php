@@ -26,6 +26,8 @@ class Step extends Model
         'multiple_choice_option_1',
         'multiple_choice_option_2',
         'multiple_choice_option_3',
+        'hidden',
+        'fork_condition',
     ];
 
     // belongs to scenario

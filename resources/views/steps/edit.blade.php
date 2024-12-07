@@ -3,6 +3,22 @@
 @section('content')
     <div class="container">
 
+        @php
+            $referencingSteps = $scenario->steps->filter(function($otherStep) use ($step) {
+                return $otherStep->fork_to_step == $step->id;
+            });
+        @endphp
+        
+        @if($referencingSteps->count() > 0)
+            <div class="alert alert-info">
+                <strong>Deze stap wordt gebruikt als doorverwijzing door:</strong>
+                <ul>
+                    @foreach($referencingSteps as $referencingStep)
+                        <li>Vraag: {{ $referencingStep->multiple_choice_question }} (wanneer optie {{ $referencingStep->fork_condition }} wordt gekozen)</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
     
        <h1>
            @if ($step->question_type === 'intro')
@@ -29,6 +45,8 @@
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
             </div>
+
+
 
             @if ($step->question_type == 'intro')
             <div class="form-group">
@@ -65,19 +83,34 @@
                     <input type="text" class="form-control" id="option_3" name="multiple_choice_option_3"
                         value="{{ $step->multiple_choice_option_3 }}">
                 </div>
-            @endif
 
-            {{-- @if ($scenario->steps->count() > 0)
+                @if ($scenario->steps->count() > 0)
+
+
+<div class="form-group">
+    <label for="fork_condition">Conditie voor doorverwijzing</label>
+    <select class="form-control" id="fork_condition" name="fork_condition">
+        <option value="">Selecteer een optie</option>
+        <option value="1" {{ $step->fork_condition == '1' ? 'selected' : '' }}>Optie 1</option>
+        <option value="2" {{ $step->fork_condition == '2' ? 'selected' : '' }}>Optie 2</option>
+        <option value="3" {{ $step->fork_condition == '3' ? 'selected' : '' }}>Optie 3</option>
+    </select>
+</div>
+
                 <div class="form-group">
                     <label for="previous_step_id">Link naar andere vraag</label>
                     <select class="form-control" id="fork_to_step" name="fork_to_step">
-                        <option value="" selected>Naar volgende vraag</option>
-                        @foreach ($scenario->steps as $step)
-                            <option value="{{ $step->id }}">Naar vraag: {{ $loop->iteration }}</option>
+                        <option value="" {{ !$step->fork_to_step ? 'selected' : '' }}>Naar volgende vraag</option>
+
+                        @foreach ($scenario->steps as $otherStep)
+                            <option value="{{ $otherStep->id }}" {{ $step->fork_to_step == $otherStep->id ? 'selected' : '' }}>Naar vraag: {{ $otherStep->question_type }}</option>
                         @endforeach
                     </select>
                 </div>
-            @endif --}}
+                @endif 
+            @endif
+
+   
 
             <button type="submit" class="btn btn-primary">Vraag opslaan</button>
 

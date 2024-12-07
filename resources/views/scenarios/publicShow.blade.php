@@ -27,16 +27,24 @@
     }
 </style>
 
+
+
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
 
     @section('content')
+
+    <div id="debug"></div>
+<div id="currentArray"></div>
+
+
+
     <div class="form">
         <form method="POST" action="{{ route('results.store') }}">
             <input type="hidden" name="scenario_id" value="{{ $scenario->id }}">
             @csrf
 
             @foreach ($scenario->steps()->orderBy('order')->get() as $index => $step)
-                <section data-uuid="{{ $step->order }}">
+            <section class="slide" data-slide="{{ $step->id }}" @if ($step->fork_to_step) data-condition="{{ $step->{'multiple_choice_option_' . $step->fork_condition} }}" data-forkStep="{{ $step->fork_to_step }}" @endif>
                     <h1>{{ $scenario->name }}</h1>
 
                     @if ($step->question_type == 'intro')
@@ -94,14 +102,13 @@
 
 
                 @if ($loop->last)
-                    <section data-uuid="{{ $step->order + 1 }}">
+                    <section class="slide" data-slide="{{ $step->order + 1 }}">
                         <h1>Bedankt voor het deelnemen</h1>
                         
                             <p>
                                 🎉 Geweldig gedaan! Je hebt het scenario succesvol afgerond! 🎈
-
-                              
                             </p>
+                        
                
                         <button type="submit">Gegevens opsturen</button>
                     </section>
@@ -131,114 +138,141 @@
         });
     }
 
-    // maybe put steps into an array so we can have multiple continuation steps.
 
-    function skipToStep(step) {
-        const finalStep = document.querySelectorAll('form section').length;
+function init(){
 
-        if(step == finalStep){
+    const debug = document.getElementById('debug');
+    const prev = document.getElementById('prev');
+    const next = document.getElementById('next');
+    const currentArray = document.getElementById("currentArray")
+
+    let index = 0;
+    const stepDivs = document.querySelectorAll('.slide');
+    let currentstep = '';
+
+    // create the steps array from the stepDivs data-slide attribute
+    steps = Array.from(stepDivs).map((stepDiv) => {
+        return stepDiv.getAttribute('data-slide');
+    });
+
+    //     // Initialize display
+    debug.innerHTML = steps[index];
+    currentArray.innerHTML = `Current array: ${steps.join(', ')}`;
+
+
+
+  document.querySelector(`[data-slide="${steps[index]}"]`).style.display = "block";
+
+
+  next.addEventListener('click', () => {
+
+    // prevent default
+    event.preventDefault();
+
+    if (index < steps.length - 1) {
+
+        index++;
+        
+        // if the currentstep is the last one show confetti
+        if (index === steps.length - 1) {
             showConfetti();
-            document.querySelector('#next').style.display = 'none';
-        }else{
-            document.querySelector('#next').style.display = 'block';
+
+            // hide the next button
+            next.style.display = "none";
         }
 
-        console.log('final step', finalStep);
+        debug.innerHTML = steps[index];
+        currentArray.innerHTML = `Current array: ${steps.join(', ')}`;
 
-        console.log('skipping to step', step);
-        // get the div with uuid step
-        const stepContent = document.querySelector(`section[data-uuid="${step}"]`);
-
-        // hide all other steps
-        const sections = document.querySelectorAll('form section');
-        sections.forEach(section => {
-            section.style.display = 'none';
+        stepDivs.forEach((stepDiv) => {
+            stepDiv.style.display = "none";
         });
 
-        // show the step
-        stepContent.style.display = 'block';
+        currentStepDiv =  document.querySelector(`[data-slide="${steps[index]}"]`);
+        document.querySelector(`[data-slide="${steps[index]}"]`).style.display = "block";
+
+        // check if the current step has the data attribute fork
+        if (currentStepDiv.getAttribute('data-forkStep')) {
+          let condition = currentStepDiv.getAttribute('data-condition');
+          let forkStep = currentStepDiv.getAttribute('data-forkStep');
+          
+          currentStepDiv.querySelectorAll('input[type="radio"]').forEach((radio) => {
+            radio.checked = false;
+          });
+
+          // select all radiobuttons listen for onchange event
+          currentStepDiv.querySelectorAll('input[type="radio"]').forEach((radio) => {
+            radio.addEventListener('change', () => {
+              if (radio.value !== condition) {
+               
+                  removeNumbers([forkStep]);
+
+                  console.log(`removed ${forkStep}`);
+                
+              } else {
+                addNumbers([forkStep])
+                console.log(`added ${forkStep}`);
+              }
+            });
+          });
+        }
+
+   
+        
+    }
+});
+
+prev.addEventListener('click', () => {
+    event.preventDefault();
+
+    next.style.display = "block";
+
+    if (index > 0) {
+        index--;
+
+
+      stepDivs.forEach((stepDiv) => {
+          stepDiv.style.display = "none";
+      });
+
+      document.querySelector(`[data-slide="${steps[index]}"]`).style.display = "block";
+
+        debug.innerHTML = steps[index];
+        currentArray.innerHTML = `Current array: ${steps.join(', ')}`;
+    }
+});
+
+
+
+
+function removeNumbers(numbersToRemove) {
+    steps = steps.filter(num => !numbersToRemove.includes(num));
+    index = Math.min(index, steps.length - 1); // Adjust index if needed
+    
+    // Update display
+    debug.innerHTML = steps[index];
+    currentArray.innerHTML = `Current array: ${steps.join(', ')}`;
+}
+
+function addNumbers(numbersToAdd) {
+
+    // if steps already contains numbersToAdd, do nothing
+    if (steps.some(num => numbersToAdd.includes(num))) {
+        return;
     }
 
-    function init() {
+    // add the numbersToAdd at the current index
+    steps.splice(index + 1, 0, ...numbersToAdd);
 
-        // get all sections inside form element
-        const sections = document.querySelectorAll('form section');
-        const finalStep = document.querySelectorAll('form section').length;
+    // Update display
+    debug.innerHTML = steps[index];
+    currentArray.innerHTML = `Current array: ${steps.join(', ')}`;
+}
 
-        let step = 1;
-
-        // get next and previous buttons
-        const nextBtn = document.querySelector('#next');
-        const prevBtn = document.querySelector('#prev');
-
-        sections[0].style.display = 'block';
-
-        // get the div with uuid firstStepCount
-        let activeStep = document.querySelector(`section[data-uuid="${step}"]`);
-        let uuid = activeStep.dataset.uuid;
-        let fork_step = parseInt(activeStep.dataset.fork, 10);
-        let data_condition = activeStep.dataset.condition;
-        let data_input = activeStep.dataset.input;
-        let data_continuation = activeStep.dataset.continuation;
-        let data_input_value = '';
-        let nextStep = '';
-
-        // add click event to next button
-        nextBtn.addEventListener('click', function() {
-            // prevent default
-            event.preventDefault();
-
-            nextStep = document.querySelector(`section[data-uuid="${step}"]`);
-
-            uuid = nextStep.dataset.uuid;
-            fork_step = parseInt(nextStep.dataset.fork);
-
-            data_condition = nextStep.dataset.condition;
-            data_input = nextStep.dataset.input;
-            data_continuation = nextStep.dataset.continuation;
-
-            if (step === finalStep) {
-                return;
-            }
+}
 
 
-            if (step == nextStep.dataset.uuid && data_input !== undefined) {
-                data_input_value = document.getElementById(data_input).value;
-            }
 
-            if (data_condition === data_input_value) {
-                step = fork_step;
-                skipToStep(fork_step);
-            } else {
-                step = step + 1;
-                skipToStep(step);
-            }
-        });
 
-        // add click event to previous button
-        prevBtn.addEventListener('click', function() {
-            event.preventDefault();
 
-            activeStep = document.querySelector(`section[data-uuid="${step}"]`);
-
-            if (activeStep.dataset.redirect !== undefined) {
-                let redirectTo = parseInt(activeStep.dataset.redirect);
-
-                if (isNaN(redirectTo)) {
-                    return;
-                }
-
-                step = redirectTo;
-                skipToStep(redirectTo)
-            } else {
-                step = step - 1;
-
-                if (step < 0) {
-                    step = 0;
-                }
-                skipToStep(step);
-            }
-
-        });
-    }
 </script>
