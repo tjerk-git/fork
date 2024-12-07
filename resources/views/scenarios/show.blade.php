@@ -48,21 +48,26 @@
         </table>
 
 
+
         <h2>Vragen:</h2>
         @if ($scenario->steps->count() > 0)
             <table class="table table-bordered mb-4">
                 <thead>
                     <tr>
                         <th>#</th>
+                    
                         <th>Vraag</th>
                         <th>Acties</th>
                     </tr>
                 </thead>
                 <tbody id="steps-sortable">
                     @foreach ($scenario->steps()->orderBy('order')->get() as $step)
-                        <tr data-id="{{ $step->id }}">
+                        @php
+                            $isForkDestination = $scenario->steps()->where('fork_to_step', $step->id)->exists();
+                        @endphp
+                        <tr data-id="{{ $step->id }}" @if($isForkDestination) style="background-color: #f8d7da" @endif>
                             <td class="handle" style="cursor: move;">&#9776;</td>
-                           
+                 
                             <td>
                                 @if ($step->question_type == 'intro')
                                     <strong>Introductie:</strong> {{ $step->description }}
@@ -70,6 +75,9 @@
                                     <strong>Open vraag:</strong> {{ $step->open_question }}
                                 @elseif ($step->question_type == 'multiple_choice_question')
                                     <strong>Meerkeuze vraag:</strong> {{ $step->multiple_choice_question }}
+                                @endif
+                                @if($isForkDestination)
+                                    <br><small><em>(Deze vraag is een doorverwijzingsdoel)</em></small>
                                 @endif
                             </td>
                             <td>

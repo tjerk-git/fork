@@ -159,9 +159,7 @@ function init(){
     debug.innerHTML = steps[index];
     currentArray.innerHTML = `Current array: ${steps.join(', ')}`;
 
-
-
-  document.querySelector(`[data-slide="${steps[index]}"]`).style.display = "block";
+    document.querySelector(`[data-slide="${steps[index]}"]`).style.display = "block";
 
 
   next.addEventListener('click', () => {
@@ -193,6 +191,8 @@ function init(){
 
         // check if the current step has the data attribute fork
         if (currentStepDiv.getAttribute('data-forkStep')) {
+          next.style.display = "none";
+
           let condition = currentStepDiv.getAttribute('data-condition');
           let forkStep = currentStepDiv.getAttribute('data-forkStep');
           
@@ -202,7 +202,10 @@ function init(){
 
           // select all radiobuttons listen for onchange event
           currentStepDiv.querySelectorAll('input[type="radio"]').forEach((radio) => {
+           
             radio.addEventListener('change', () => {
+              next.style.display = "block";
+              
               if (radio.value !== condition) {
                
                   removeNumbers([forkStep]);
@@ -215,10 +218,7 @@ function init(){
               }
             });
           });
-        }
-
-   
-        
+        }     
     }
 });
 
@@ -242,37 +242,29 @@ prev.addEventListener('click', () => {
     }
 });
 
-
-
-
-function removeNumbers(numbersToRemove) {
-    steps = steps.filter(num => !numbersToRemove.includes(num));
-    index = Math.min(index, steps.length - 1); // Adjust index if needed
-    
-    // Update display
-    debug.innerHTML = steps[index];
-    currentArray.innerHTML = `Current array: ${steps.join(', ')}`;
-}
-
-function addNumbers(numbersToAdd) {
-
-    // if steps already contains numbersToAdd, do nothing
-    if (steps.some(num => numbersToAdd.includes(num))) {
-        return;
+    function removeNumbers(numbersToRemove) {
+        steps = steps.filter(num => !numbersToRemove.includes(num));
+        index = Math.min(index, steps.length - 1); // Adjust index if needed
+        
+        // Update display
+        debug.innerHTML = steps[index];
+        currentArray.innerHTML = `Current array: ${steps.join(', ')}`;
     }
 
-    // add the numbersToAdd at the current index
-    steps.splice(index + 1, 0, ...numbersToAdd);
+    function addNumbers(numbersToAdd) {
 
-    // Update display
-    debug.innerHTML = steps[index];
-    currentArray.innerHTML = `Current array: ${steps.join(', ')}`;
+        // if steps already contains numbersToAdd, do nothing
+        if (steps.some(num => numbersToAdd.includes(num))) {
+            return;
+        }
+
+        // add the numbersToAdd at the current index
+        steps.splice(index + 1, 0, ...numbersToAdd);
+
+        // Update display
+        debug.innerHTML = steps[index];
+        currentArray.innerHTML = `Current array: ${steps.join(', ')}`;
+    }
+
 }
-
-}
-
-
-
-
-
 </script>

@@ -59,65 +59,66 @@
         document.addEventListener('DOMContentLoaded', function() {
             @foreach ($scenario->steps()->where('question_type', 'multiple_choice_question')->get() as $step)
                 // Get all results for this step
-                const results_{{ $step->id }} = @json($step->resultLines->pluck('value'));
+                var results = @json($step->resultLines->pluck('value'));
                 
                 // Count occurrences of each answer
-                const counts_{{ $step->id }} = results_{{ $step->id }}.reduce((acc, val) => {
+                var counts = results.reduce(function(acc, val) {
                     acc[val] = (acc[val] || 0) + 1;
                     return acc;
                 }, {});
 
                 // Convert to array of objects for D3
-                const data_{{ $step->id }} = Object.entries(counts_{{ $step->id }}).map(([key, value]) => ({
-                    answer: key,
-                    count: value
-                }));
+                var data = Object.entries(counts).map(function(entry) {
+                    return {
+                        answer: entry[0],
+                        count: entry[1]
+                    };
+                });
 
                 // Set up dimensions
-                const width = 400;
-                const height = 400;
-                const radius = Math.min(width, height) / 2;
+                var width = 400;
+                var height = 400;
+                var radius = Math.min(width, height) / 2;
 
                 // Create color scale
-                const color = d3.scaleOrdinal(d3.schemeCategory10);
+                var color = d3.scaleOrdinal(d3.schemeCategory10);
 
                 // Create SVG
-                const svg_{{ $step->id }} = d3.select('#pie-chart-{{ $step->id }}')
+                var svg = d3.select('#pie-chart-{{ $step->id }}')
                     .append('svg')
                     .attr('width', width)
                     .attr('height', height)
                     .append('g')
-                    .attr('transform', `translate(${width / 2},${height / 2})`);
+                    .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')');
 
                 // Create pie chart
-                const pie = d3.pie()
-                    .value(d => d.count);
+                var pie = d3.pie()
+                    .value(function(d) { return d.count; });
 
-                const arc = d3.arc()
+                var arc = d3.arc()
                     .innerRadius(0)
                     .outerRadius(radius);
 
                 // Add paths
-                const paths = svg_{{ $step->id }}.selectAll('path')
-                    .data(pie(data_{{ $step->id }}))
+                svg.selectAll('path')
+                    .data(pie(data))
                     .enter()
                     .append('path')
                     .attr('d', arc)
-                    .attr('fill', (d, i) => color(i))
+                    .attr('fill', function(d, i) { return color(i); })
                     .attr('stroke', 'white')
                     .style('stroke-width', '2px');
 
                 // Add labels
-                const labels = svg_{{ $step->id }}.selectAll('text')
-                    .data(pie(data_{{ $step->id }}))
+                svg.selectAll('text')
+                    .data(pie(data))
                     .enter()
                     .append('text')
-                    .attr('transform', d => `translate(${arc.centroid(d)})`)
+                    .attr('transform', function(d) { return 'translate(' + arc.centroid(d) + ')'; })
                     .attr('dy', '.35em')
                     .style('text-anchor', 'middle')
-                    .text(d => `${d.data.answer} (${d.data.count})`);
+                    .text(function(d) { return d.data.answer + ' (' + d.data.count + ')'; });
             @endforeach
-            
         });
     </script>
 

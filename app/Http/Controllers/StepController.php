@@ -92,7 +92,7 @@ class StepController extends Controller
             'attachment' =>  $validatedData['attachment'],
             'open_question' => $request->open_question,
             'question_type' => $request->question_type,
-            'hidden' => $request->hidden,
+            'hidden' => 0,
             'multiple_choice_question' => $request->multiple_choice_question,
             'multiple_choice_option_1' => $request->multiple_choice_option_1,
             'multiple_choice_option_2' => $request->multiple_choice_option_2,
