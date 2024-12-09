@@ -25,7 +25,7 @@
                 <thead>
                     <tr>
                         <th>Datum</th>
-                        <th>IP</th>
+                        <th>E-mail</th>
                         <th>Vraag</th>
                         <th>Antwoord</th>
                     </tr>
@@ -35,7 +35,7 @@
                         @foreach ($result->lines as $line)
                             <tr>
                                 <td>{{ $result->created_at->format('d-m-Y H:i') }}</td>
-                                <td>{{ $result->ip }}</td>
+                                <td>{{ $result->email ?? 'Geen email' }}</td>
                                 <td>
                                     @if ($line->step->question_type === 'open_question')
                                         {{ $line->step->open_question }}

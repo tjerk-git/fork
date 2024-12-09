@@ -113,6 +113,12 @@
                                 🎉 Geweldig gedaan! Je hebt het scenario succesvol afgerond! 🎈
                             </p>
                         
+                            <p>Mocht je de resultaten zelf willen bewaren, vul hieronder je e-mailadres in:</p>
+                            <div class="form-group" id="email">
+                                <label for="email">E-mailadres</label>
+                                <input type="email" class="form-control" id="email"
+                                    name="email" value="" placeholder="Je e-mailadres">
+                            </div>
                
                         <button type="submit">Gegevens opsturen</button>
                     </section>

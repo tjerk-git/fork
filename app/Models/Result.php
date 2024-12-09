@@ -16,6 +16,7 @@ class Result extends Model
         'session',
         'ip',
         'browser',
+        'email',
         'time_started',
         'time_ended',
         'scenario_id',
