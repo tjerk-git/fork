@@ -12,7 +12,7 @@ class ScenarioController extends Controller
 {
     public function index()
     {
-        $scenarios = Scenario::with('user')->paginate(10);
+        $scenarios = Scenario::where('user_id', auth()->id())->get();
         return view('scenarios.index', compact('scenarios'));
     }
 
