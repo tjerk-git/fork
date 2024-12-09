@@ -3,15 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\Scenario;
-use App\Models\Step;
-use App\Models\Component;
-use App\Models\Result;
-use App\Models\ResultLine;
-
-use Faker\Factory as Faker;
 
 
 class DatabaseSeeder extends Seeder
@@ -33,7 +25,7 @@ class DatabaseSeeder extends Seeder
     //     ]);
 
     // create a test user with email tjerk.dijkstra@icloud.com
-        $user = User::factory()->create([
+        $user = User::create([
             'name' => 'Tjerk Dijkstra',
             'email' => 'tjerk.dijkstra@icloud.com',
         ]);
