@@ -102,7 +102,11 @@
 
 
                 @if ($loop->last)
-                    <section class="slide" data-slide="{{ $step->order + 1 }}">
+
+                    @php
+                    $lastSlideNumber = $step->id + 2;
+                    @endphp
+                    <section class="slide" data-slide="{{ $lastSlideNumber }}">
                         <h1>Bedankt voor het deelnemen</h1>
                         
                             <p>
