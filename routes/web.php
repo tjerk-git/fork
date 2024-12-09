@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ScenarioController;
 use App\Http\Controllers\StepController;
 use App\Http\Controllers\ResultsController;
+use App\Http\Controllers\UserController;
 
 // Debug route
 Route::get('/debug', function () {
@@ -18,6 +19,9 @@ Route::get('/', function () {
 
 // Authenticated routes
 Route::middleware(['auth'])->group(function () {
+    // Users
+    Route::resource('users', UserController::class);
+
     // Scenarios
     Route::resource('scenarios', ScenarioController::class);
     Route::put('/scenarios/{scenario}/edit', [ScenarioController::class, 'update'])->name('scenarios.update');

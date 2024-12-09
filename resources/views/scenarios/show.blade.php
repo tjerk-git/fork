@@ -50,6 +50,11 @@
 
 
         <h2>Vragen:</h2>
+        <div class="container text-right mb-3">
+            <a href="{{ route('steps.create', ['scenario' => $scenario->id]) }}" class="outline" role="button">
+                <i class="fas fa-plus"></i> Voeg een vraag toe
+            </a>
+        </div>
         @if ($scenario->steps->count() > 0)
             <table class="table table-bordered mb-4">
                 <thead>
@@ -60,6 +65,7 @@
                         <th>Acties</th>
                     </tr>
                 </thead>
+
                 <tbody id="steps-sortable">
                     @foreach ($scenario->steps()->orderBy('order')->get() as $step)
                         @php
@@ -81,7 +87,7 @@
                                 @endif
                             </td>
                             <td>
-                        <a href="{{ route('steps.edit', ['step' => $step->id, 'scenario' => $scenario->id]) }}" class="outline">
+                        <a href="{{ route('steps.edit', ['step' => $step->id, 'scenario' => $scenario->id]) }}" class="outline" role="button">
                             <i class="fas fa-pencil"></i> Bewerken
                         </a>
 
@@ -103,9 +109,11 @@
             <p>Geen vragen toegevoegd..</p>
         @endif
 
-        <a href="{{ route('steps.create', ['scenario' => $scenario->id]) }}" class="outline" role="button">
-            <i class="fas fa-plus"></i> Voeg een vraag toe
-        </a>
+        <div class="container text-right mb-3">
+            <a href="{{ route('steps.create', ['scenario' => $scenario->id]) }}" class="outline" role="button">
+                <i class="fas fa-plus"></i> Voeg een vraag toe
+            </a>
+        </div>
 
         </div>
 

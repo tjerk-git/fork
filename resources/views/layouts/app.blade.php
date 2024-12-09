@@ -32,6 +32,7 @@
                 <ul>
                     <li><a href="{{ route('scenarios.index') }}" class="{{ request()->routeIs('scenarios.index') ? 'secondary' : '' }}">Scenarios</a></li>
                   <li><a href="{{ route('results.index') }}" class="{{ request()->routeIs('results.*') ? 'secondary' : '' }}">Resultaten</a></li>
+                  <li><a href="{{ route('users.index') }}" class="{{ request()->routeIs('users.*') ? 'secondary' : '' }}">Gebruikers</a></li>
                 </ul>
             </nav>
         </aside>
