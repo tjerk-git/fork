@@ -248,8 +248,8 @@ function init(){
             next.style.display = "none";
         }
 
-        debug.innerHTML = steps[index];
-        currentArray.innerHTML = `Current array: ${steps.join(', ')}`;
+        // debug.innerHTML = steps[index];
+        // currentArray.innerHTML = `Current array: ${steps.join(', ')}`;
 
         stepDivs.forEach((stepDiv) => {
             stepDiv.style.display = "none";

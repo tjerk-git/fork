@@ -1,5 +1,16 @@
 @extends('layouts.front')
 
+
+<style>
+    .error{
+        background-color: #f8d7da;
+        color: #721c24;
+        border-radius: 5px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+</style>
+
 @section('content')
 <div class="container">
     <article class="grid">
@@ -8,6 +19,11 @@
                 <h1>Toegangscode vereist</h1>
                 <h2>Voer de toegangscode in om verder te gaan</h2>
             </hgroup>
+            @if (session('error'))
+                <article aria-label="Error message" class="error">
+                    {{ session('error') }}
+                </article>
+            @endif
 
             @if ($errors->any())
                 <article aria-label="Error message" class="error">
