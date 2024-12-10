@@ -168,8 +168,8 @@
                         <h1>Gegevens insturen</h1>
                         
                             <p>
-                                Je mag nog terug om je antwoorden aan te passen, of je mag de resultaten opsturen.
-                                Tot die tijd zijn de resultaten nog opgeslagen.
+                                Je kan nog terug om je antwoorden aan te passen, of je mag de resultaten opsturen.
+                                Tot die tijd zijn de resultaten <strong>niet</strong> opgestuurd.
                             </p>
                         
                             <p>Mocht je de resultaten zelf willen bewaren en inzien, vul hieronder je e-mailadres in:</p>
