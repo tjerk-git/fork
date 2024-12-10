@@ -31,7 +31,7 @@ class AuthController extends Controller
         $token = \App\Models\LoginToken::whereToken(hash('sha256', $token))->firstOrFail();
         abort_unless($request->hasValidSignature() && $token->isValid(), 401);
         $token->consume();
-        Auth::login($token->user);
+        Auth::login($token->user, true);
         return redirect('/');
     }
 
