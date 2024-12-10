@@ -17,9 +17,15 @@
 <body>
     <header>
         <div>
+            <a href="{{ route('scenarios.index') }}">
+            <i class="fa-solid fa-code-branch"></i>
+                FORK
+            </a>
+        </div>
+        <div>
             @if (Auth::check())
-                <div>
-                    Welkom: {{ Auth::user()->email }}
+                <div style="font-size: 0.7rem;">
+                    {{ Auth::user()->name }} ({{ Auth::user()->email }})
                     <a href="{{ route('logout') }}">Uitloggen</a>
                 </div>
             @endif

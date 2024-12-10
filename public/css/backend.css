@@ -3,15 +3,22 @@ video {
 }
 
 header {
-  background-color: #f8f9fa;
+ 
+  background: linear-gradient(90deg, hsla(195, 86%, 50%, 1) 0%, hsla(236, 93%, 65%, 1) 100%);
+  color: #fff;
   padding: 2rem;
+  min-height:60px;
+  display:flex;
+  justify-content: space-between;
+  align-items: center;
+
 }
 
-header div {
-  display: flex;
-  justify-content: flex-end;
-  gap: 1rem;
+header a{
+  color:white;
+  text-decoration: none;
 }
+
 
 .headings {
   display: flex;
@@ -26,6 +33,7 @@ header div {
 
 .headings a {
   margin-left: auto;
+  color:white;
 }
 
 .alert {
