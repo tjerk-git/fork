@@ -1,3 +1,5 @@
+<div class="attachment_container">
+
 @if ($step->attachment)
     @php
         $fileExtension = strtolower(pathinfo($step->attachment, PATHINFO_EXTENSION));
@@ -15,3 +17,5 @@
             alt="{{ $step->description }}">
     @endif
 @endif
+
+</div>

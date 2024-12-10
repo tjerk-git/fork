@@ -16,14 +16,61 @@
         border-radius: 10px;
         border: 1px solid var(--pico-muted-border-color);
         padding: 3rem;
-        max-width:660px;
+        max-width:860px;
         margin: 0 auto;
+    }
+
+    video{
+        padding:1rem;
+    }
+    
+    legend{
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 1rem;
+    }
+
+    .attachment_container{
+        display: flex;
+        justify-content: center;
+        margin: 1rem 0;
+    }
+
+    p{
+        margin: 1rem 0;
+        text-align: left;
+        word-break: break-word;
+        max-width: 600px;
     }
 
     footer{
         display: flex;
         justify-content: space-between;
         margin-top: 2rem;
+    }
+
+    .radio_options{
+        border: 1px solid var(--pico-muted-border-color);
+        border-radius: 10px;
+        padding: 1rem;
+        display:flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .thank-you-container {
+        text-align: center;
+        padding: 2rem;
+    }
+
+    .thank-you-container h1 {
+        margin-bottom: 1rem;
+        font-size: 2rem;
+    }
+
+    .thank-you-container p {
+        text-align: center;
+        margin: 1rem auto;
     }
 </style>
 
@@ -37,9 +84,20 @@
 <div id="currentArray"></div>
 
 
+    
+
 
     <div class="form">
-        <form method="POST" action="{{ route('results.store') }}">
+        @if (session('success'))
+            <div class="thank-you-container">
+                <h1>🎉 Bedankt voor je deelname! 🎉</h1>
+                <p>{{ session('success') }}</p>
+                <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcDdtY2JxYjF1M245a3QxOTRxNnBxbXE4NHF6ZDVtN2txYmF1OWx6eCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/IwAZ6dvvvaTtdI8SD5/giphy.gif" 
+                     alt="Thank you" 
+                     style="max-width: 300px; margin: 2rem auto; display: block;">
+            </div>
+        @else
+            <form method="POST" action="{{ route('results.store') }}">
             <input type="hidden" name="scenario_id" value="{{ $scenario->id }}">
             @csrf
 
@@ -65,12 +123,12 @@
                     @elseif ($step->question_type == 'multiple_choice_question')
                         @include('partials.attachment')
                         <div class="form-group" id="multiple_c">
-                            <h2>{{ $step->multiple_choice_question }}</h2>
+                            <p>{{ $step->multiple_choice_question }}</p>
                             
                             <fieldset>
                                 <legend>Kies een antwoord</legend>
                                 
-                                <div class="grid">
+                                <div class="radio_options">
                                     <label for="answer_{{ $step->id }}_1">
                                         <input type="radio" 
                                                id="answer_{{ $step->id }}_1" 
@@ -130,6 +188,7 @@
                 <button id="next">Volgende stap</button>
             </footer>
         </form>
+        @endif
         </div>
 
     @endsection
@@ -165,9 +224,9 @@ function init(){
         return stepDiv.getAttribute('data-slide');
     });
 
-    //     // Initialize display
-    debug.innerHTML = steps[index];
-    currentArray.innerHTML = `Current array: ${steps.join(', ')}`;
+    // //     // Initialize display
+    // debug.innerHTML = steps[index];
+    // currentArray.innerHTML = `Current array: ${steps.join(', ')}`;
 
     document.querySelector(`[data-slide="${steps[index]}"]`).style.display = "block";
 
@@ -247,8 +306,8 @@ prev.addEventListener('click', () => {
 
       document.querySelector(`[data-slide="${steps[index]}"]`).style.display = "block";
 
-        debug.innerHTML = steps[index];
-        currentArray.innerHTML = `Current array: ${steps.join(', ')}`;
+        // debug.innerHTML = steps[index];
+        // currentArray.innerHTML = `Current array: ${steps.join(', ')}`;
     }
 });
 
@@ -256,9 +315,9 @@ prev.addEventListener('click', () => {
         steps = steps.filter(num => !numbersToRemove.includes(num));
         index = Math.min(index, steps.length - 1); // Adjust index if needed
         
-        // Update display
-        debug.innerHTML = steps[index];
-        currentArray.innerHTML = `Current array: ${steps.join(', ')}`;
+        // // Update display
+        // debug.innerHTML = steps[index];
+        // currentArray.innerHTML = `Current array: ${steps.join(', ')}`;
     }
 
     function addNumbers(numbersToAdd) {
@@ -272,8 +331,8 @@ prev.addEventListener('click', () => {
         steps.splice(index + 1, 0, ...numbersToAdd);
 
         // Update display
-        debug.innerHTML = steps[index];
-        currentArray.innerHTML = `Current array: ${steps.join(', ')}`;
+        // debug.innerHTML = steps[index];
+        // currentArray.innerHTML = `Current array: ${steps.join(', ')}`;
     }
 
 }
