@@ -65,16 +65,17 @@ class ResultsController extends Controller
 
     public function index()
     {
-        $scenarios = Scenario::where('user_id', auth()->id())->get();
+        //$scenarios = Scenario::where('user_id', auth()->id())->get();
+        $scenarios = Scenario::with('results')->get();
         return view('results.index', compact('scenarios'));
     }
 
     public function show(Scenario $scenario)
     {
         // Check if the scenario belongs to the current user
-        if ($scenario->user_id !== auth()->id()) {
-            abort(403, 'Unauthorized access');
-        }
+        // if ($scenario->user_id !== auth()->id()) {
+        //     abort(403, 'Unauthorized access');
+        // }
     
         $scenario->load('steps', 'results');
         return view('results.show', compact('scenario'));

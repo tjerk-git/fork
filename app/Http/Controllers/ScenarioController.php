@@ -12,7 +12,9 @@ class ScenarioController extends Controller
 {
     public function index()
     {
-        $scenarios = Scenario::where('user_id', auth()->id())->get();
+        //$scenarios = Scenario::where('user_id', auth()->id())->get();
+        // get all scenarios
+        $scenarios = Scenario::all();
         return view('scenarios.index', compact('scenarios'));
     }
 
