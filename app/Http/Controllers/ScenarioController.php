@@ -74,17 +74,17 @@ class ScenarioController extends Controller
 
         return response()->json(['success' => true]);
     }
-
+    
     public function update(Request $request, Scenario $scenario)
     {
 
-        $validatedData = $request->validate([
-            'name' => 'required|max:255',
-            'is_public' => 'boolean',
-            'access_code' => 'nullable|string|min:4|max:20',
-        ]);
+        // $validatedData = $request->validate([
+        //     'name' => 'required|max:255',
+        //     'is_public' => 'boolean',
+        //     'access_code' => 'nullable|string|min:4|max:20',
+        // ]);
     
-        $scenario->update($validatedData);
+        $scenario->update($request->all());
 
         return redirect()->route('scenarios.show', $scenario)->with('success', 'Scenario updated successfully');
     }
@@ -118,7 +118,7 @@ class ScenarioController extends Controller
         $scenario = Scenario::whereSlug($slug)->firstOrFail();
 
         $request->validate([
-            'accessCode' => 'required|string|min:6|max:20',
+            'accessCode' => 'required|string|min:2|max:6',
         ]);
 
         if ($scenario->access_code !== $request->accessCode) {

@@ -34,7 +34,8 @@
 
             <tr>
                 <th>Acties</th>
-                <td> <a href="{{ route('scenarios.edit', $scenario) }}" role="button" class="outline">Bewerken</a>
+                <td> 
+                    <a href="{{ route('scenarios.edit', $scenario) }}" role="button" class="outline">Bewerken</a>
 
                     <form action="{{ route('scenarios.destroy', $scenario) }}" method="POST" style="display: inline-block;">
                         @csrf
@@ -42,6 +43,20 @@
                         <button type="submit" class="btn btn-danger secondary outline"
                             onclick="return confirm('Weet je zeker dat je dit scenario wilt verwijderen?')">Verwijderen</button>
                     </form>
+
+                    <form action="{{ route('scenarios.update', $scenario) }}" method="POST" style="display: inline-block;">
+                        @csrf
+                        @method('PUT')
+                        <input type="hidden" name="is_public" value="{{ $scenario->is_public ? '0' : '1' }}">
+                        <button type="submit" class="outline {{ $scenario->is_public ? 'secondary' : 'primary' }}">
+                            <i class="fas {{ $scenario->is_public ? 'fa-eye-slash' : 'fa-eye' }}"></i>
+                            {{ $scenario->is_public ? 'Maak privé' : 'Maak publiek' }}
+                        </button>
+                    </form>
+
+                    <a href="{{ route('results.show', $scenario) }}" role="button" class="outline">
+                        <i class="fas fa-chart-bar"></i> Bekijk resultaten
+                    </a>
                 </td>
             </tr>
 

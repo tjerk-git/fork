@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="container">
-        <h1>Edit Scenario: {{ $scenario->name }}</h1>
+        <h1>Bewerk: {{ $scenario->name }}</h1>
 
         <form action="{{ route('scenarios.update', $scenario) }}" method="POST" enctype="multipart/form-data">
             @csrf
@@ -16,22 +16,11 @@
                 @enderror
             </div>
 
-            <div class="form-group">
-                <div class="custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input" id="is_public" name="is_public" value="1"
-                        {{ old('is_public', $scenario->is_public) ? 'checked' : '' }}>
-                    <label class="custom-control-label" for="is_public">Maak scenario publiek beschikbaar op:
-                        <a
-                            href="{{ url('/scenarios/start/' . $scenario->slug) }}">{{ url('/scenarios/start/' . $scenario->slug) }}</a>
-                    </label>
-                </div>
-            </div>
-            <br>
 
             <div class="form-group">
-                <label for="access_code">Toegangscode</label>
+                <label for="access_code">Toegangscode (6 karakters)</label>
                 <input type="text" class="form-control @error('access_code') is-invalid @enderror" id="access_code"
-                    name="access_code" value="{{ old('access_code', $scenario->access_code) }}">
+                    name="access_code" value="{{ old('access_code', $scenario->access_code) }}" maxlength="6">
                 @error('access_code')
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
