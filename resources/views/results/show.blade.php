@@ -11,7 +11,7 @@
 
         @foreach ($scenario->steps()->where('question_type', 'multiple_choice_question')->get() as $step)
             <div class="chart-container">
-                <h3>{{ $step->multiple_choice_question }}</h3>
+                <p>{{ $step->multiple_choice_question }}</p>
                 <div id="pie-chart-{{ $step->id }}" class="pie-chart"></div>
             </div>
         @endforeach
@@ -114,10 +114,21 @@
                     .data(pie(data))
                     .enter()
                     .append('text')
-                    .attr('transform', function(d) { return 'translate(' + arc.centroid(d) + ')'; })
+                    .attr('transform', function(d) { 
+                        // Only show label if slice is big enough
+                        return d.endAngle - d.startAngle > 0.2 ? 'translate(' + arc.centroid(d) + ')' : null; 
+                    })
                     .attr('dy', '.35em')
                     .style('text-anchor', 'middle')
-                    .text(function(d) { return d.data.answer + ' (' + d.data.count + ')'; });
+                    .style('font-size', '12px')  // Set smaller font size
+                    .text(function(d) { 
+                        // Truncate answer if too long
+                        let answer = d.data.answer;
+                        if (answer.length > 15) {
+                            answer = answer.substring(0, 12) + '...';
+                        }
+                        return answer + ' (' + d.data.count + ')'; 
+                    });
             @endforeach
         });
     </script>
