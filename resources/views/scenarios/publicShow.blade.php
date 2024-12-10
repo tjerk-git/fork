@@ -165,13 +165,14 @@
                     $lastSlideNumber = $step->id + 2;
                     @endphp
                     <section class="slide" data-slide="{{ $lastSlideNumber }}">
-                        <h1>Bedankt voor het deelnemen</h1>
+                        <h1>Gegevens insturen</h1>
                         
                             <p>
-                                🎉 Geweldig gedaan! Je hebt het scenario succesvol afgerond! 🎈
+                                Je mag nog terug om je antwoorden aan te passen, of je mag de resultaten opsturen.
+                                Tot die tijd zijn de resultaten nog opgeslagen.
                             </p>
                         
-                            <p>Mocht je de resultaten zelf willen bewaren, vul hieronder je e-mailadres in:</p>
+                            <p>Mocht je de resultaten zelf willen bewaren en inzien, vul hieronder je e-mailadres in:</p>
                             <div class="form-group" id="email">
                                 <label for="email">E-mailadres</label>
                                 <input type="email" class="form-control" id="email"
