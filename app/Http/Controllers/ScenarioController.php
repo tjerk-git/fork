@@ -118,7 +118,7 @@ class ScenarioController extends Controller
         $scenario = Scenario::whereSlug($slug)->firstOrFail();
 
         $request->validate([
-            'accessCode' => 'required|string|min:2|max:6',
+            'accessCode' => 'required|string|min:2|max:20',
         ]);
 
         if ($scenario->access_code !== $request->accessCode) {
