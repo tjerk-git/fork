@@ -11,7 +11,7 @@ class LoginToken extends Model
 
     protected $guarded = [];
     protected $dates = [
-        'expires_at', 'consumed_at',
+        'expires_at',
     ];
 
     public function user()
@@ -21,22 +21,11 @@ class LoginToken extends Model
 
     public function isValid()
     {
-        return !$this->isExpired() && !$this->isConsumed();
+        return !$this->isExpired();
     }
 
     public function isExpired()
     {
         return \Carbon\Carbon::parse($this->expires_at)->isBefore(now());
-    }
-
-    public function isConsumed()
-    {
-        return $this->consumed_at !== null;
-    }
-
-    public function consume()
-    {
-        $this->consumed_at = now();
-        $this->save();
     }
 }

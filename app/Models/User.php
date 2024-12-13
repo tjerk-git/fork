@@ -35,15 +35,19 @@ class User extends Authenticatable
         return $this->hasMany(LoginToken::class);
     }
 
-    public function sendLoginLink()
+    public function generateLoginToken()
     {
-        $plaintext = Str::random(32);
-        $token = $this->loginTokens()->create([
-            'token' => hash('sha256', $plaintext),
-            'expires_at' => now()->addMinutes(15),
+        // Invalidate any existing tokens
+        $this->loginTokens()->delete();
+        
+        // Generate a simple 6-digit token
+        $token = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+        
+        $this->loginTokens()->create([
+            'token' => hash('sha256', $token),
+            'expires_at' => now()->addDays(7), // Tokens valid for 7 days
         ]);
 
-        Mail::to($this->email)->send(new MagicLoginLink($plaintext, $token->expires_at));
+        return $token;
     }
 }
-

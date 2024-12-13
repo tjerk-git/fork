@@ -14,12 +14,22 @@
                             <p>{{ $message }}</p>
                         @enderror
                     </div>
-                    <button>Verstuur email om in te loggen</button>
+                    <button>Verstuur login token</button>
                 </form>
             @else
-                <p>Gebruik de link in je e-mail om in te loggen</p>
+                <p>Check je e-mail voor je login token</p>
+                <form action="{{ route('verify-token') }}" method="post">
+                    @csrf
+                    <div>
+                        <label for="token">Login token</label>
+                        <input type="text" name="token" id="token" required />
+                        @error('token')
+                            <p>{{ $message }}</p>
+                        @enderror
+                    </div>
+                    <button>Login</button>
+                </form>
             @endif
-
         </div>
     </div>
 @endsection

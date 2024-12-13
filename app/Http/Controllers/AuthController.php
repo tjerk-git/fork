@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\LoginToken;
 use Illuminate\Support\Facades\Auth;
-
+use App\Mail\LoginToken as LoginTokenMail;
+use Illuminate\Support\Facades\Mail;
 
 class AuthController extends Controller
 {
@@ -19,19 +21,39 @@ class AuthController extends Controller
         $data = $request->validate([
             'email' => ['required', 'email', 'exists:users,email'],
         ]);
-        User::whereEmail($data['email'])
-            ->first()
-            ->sendLoginLink();
+
+        $user = User::whereEmail($data['email'])->first();
+        $token = $user->generateLoginToken();
+        
+        Mail::to($user->email)->send(new LoginTokenMail($token));
+        
         session()->flash('success', true);
+        session()->put('email', $data['email']);
         return redirect()->back();
     }
 
-    public function verifyLogin(Request $request, $token)
+    public function showVerifyToken()
     {
-        $token = \App\Models\LoginToken::whereToken(hash('sha256', $token))->firstOrFail();
-        abort_unless($request->hasValidSignature() && $token->isValid(), 401);
-        $token->consume();
-        Auth::login($token->user, true);
+        return view('auth.verify-token');
+    }
+
+    public function verifyToken(Request $request)
+    {
+        $data = $request->validate([
+            'token' => ['required', 'string', 'size:6'],
+        ]);
+
+        $email = session('email');
+        $user = User::whereEmail($email)->firstOrFail();
+        $token = $user->loginTokens()->where('token', hash('sha256', $data['token']))->first();
+
+        if (!$token || !$token->isValid()) {
+            return back()->withErrors(['token' => 'Invalid or expired token']);
+        }
+
+        Auth::login($user, true);
+        $token->delete();
+
         return redirect('/');
     }
 

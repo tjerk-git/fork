@@ -52,7 +52,8 @@ Route::middleware(['guest'])->group(function () {
     // Authentication
     Route::get('login', [AuthController::class, 'showLogin'])->name('login.show');
     Route::post('login', [AuthController::class, 'login'])->name('login');
-    Route::get('verify-login/{token}', [AuthController::class, 'verifyLogin'])->name('verify-login');
+    Route::get('verify-token', [AuthController::class, 'showVerifyToken'])->name('verify-token');
+    Route::post('verify-token', [AuthController::class, 'verifyToken'])->name('verify-token');
 });
 
  // Public scenario access
