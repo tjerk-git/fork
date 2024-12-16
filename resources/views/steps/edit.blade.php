@@ -71,6 +71,15 @@
                        name="open_question"
                        value="{{ $step->open_question }}">
             </div>
+
+            @elseif ($step->question_type == 'tussenstap')
+                <div class="form-group" id="tussenstap_div">
+                    <label for="description">Beschrijving</label>
+                    <textarea class="form-control" 
+                              id="description" 
+                              name="description" 
+                              rows="3">{{ $step->description }}</textarea>
+                </div>
         @elseif ($step->question_type == 'multiple_choice_question')
             <div class="form-group" id="multiple_c">
                 <label for="multiple_choice_question">Een meerkeuze vraag:</label>
@@ -101,6 +110,9 @@
                        name="multiple_choice_option_3"
                        value="{{ $step->multiple_choice_option_3 }}">
             </div>
+
+   
+           
 
             {{-- Conditional Navigation --}}
             @if ($scenario->steps->count() > 0)

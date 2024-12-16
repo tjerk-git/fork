@@ -96,6 +96,9 @@
                                     <strong>Open vraag:</strong> {{ $step->open_question }}
                                 @elseif ($step->question_type == 'multiple_choice_question')
                                     <strong>Meerkeuze vraag:</strong> {{ $step->multiple_choice_question }}
+                                
+                                @elseif ($step->question_type == 'tussenstap')
+                                    <strong>Tussenstap:</strong> {{ $step->description }}
                                 @endif
                                 @if($isForkDestination)
                                     <br><small><em>(Deze vraag is een doorverwijzingsdoel)</em></small>

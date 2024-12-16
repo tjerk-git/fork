@@ -120,6 +120,13 @@
                             <input type="text" class="form-control" id="answer_{{ $step->id }}"
                                 name="answer_{{ $step->id }}" value="" placeholder="Antwoord">
                         </div>
+
+                    @elseif ($step->question_type == 'tussenstap')
+                        @include('partials.attachment')
+                        <div class="form-group" id="tussenstap_div">
+                            <p>{{ $step->description }}</p>
+                        </div>
+                    
                     @elseif ($step->question_type == 'multiple_choice_question')
                         @include('partials.attachment')
                         <div class="form-group" id="multiple_c">

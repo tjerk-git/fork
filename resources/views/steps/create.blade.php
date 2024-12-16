@@ -9,6 +9,8 @@
           enctype="multipart/form-data">
         @csrf
         <input type="hidden" name="scenario_id" value="{{ $scenario->id }}">
+
+
         <input type="hidden" name="question_type" id="question_type">
 
         {{-- Question Type Selector --}}
@@ -18,6 +20,7 @@
                 <option value="">Selecteer een type vraag</option>
                 <option value="open_question">Open vraag</option>
                 <option value="multiple_c">Meerkeuze vraag</option>
+                <option value="tussenstap">Tussenstap</option>
             </select>
         </div>
 
@@ -39,6 +42,16 @@
             </div>
         </div>
 
+
+        <div class="form-group" id="tussenstap_div" style="display:none;">
+            <label for="description">Beschrijving</label>
+            <textarea class="form-control" 
+                      id="description" 
+                      name="description" 
+                      rows="3">{{ old('description') }}</textarea>
+        </div>
+
+
         {{-- Open Question --}}
         <div class="form-group" id="open_question_div" style="display:none;">
             <label for="open_question">Een open vraag</label>
@@ -48,6 +61,7 @@
                    name="open_question"
                    value="{{ old('open_question') }}">
         </div>
+
 
         {{-- Multiple Choice Question --}}
         <div class="form-group" id="multiple_c" style="display:none;">
@@ -156,6 +170,11 @@
         } else if (this.value === 'multiple_c') {
             multipleChoiceDiv.style.display = 'block';
             questionType.value = 'multiple_choice_question';
+        }
+        else if (this.value === 'tussenstap') {
+            const tussenstapDiv = document.getElementById('tussenstap_div');
+            tussenstapDiv.style.display = 'block';
+            questionType.value = 'tussenstap';
         }
     });
 
