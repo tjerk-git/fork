@@ -1,5 +1,6 @@
 @extends('layouts.front')
 
+
 <style>
     section {
         display: none;
@@ -74,18 +75,12 @@
     }
 </style>
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tingle/0.16.0/tingle.min.css" />
 
-
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+<script defer=true src="https://cdnjs.cloudflare.com/ajax/libs/tingle/0.16.0/tingle.min.js"></script>
+<script defer=truesrc="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
 
     @section('content')
-
-    <div id="debug"></div>
-<div id="currentArray"></div>
-
-
-    
-
 
     <div class="form">
         @if (session('success'))
@@ -118,7 +113,8 @@
                         <div class="form-group" id="open_question_div">
                             <label for="answer_{{ $step->id }}">{{ $step->open_question }}</label>
                             <input type="text" class="form-control" id="answer_{{ $step->id }}"
-                                name="answer_{{ $step->id }}" value="" placeholder="Antwoord">
+                                name="answer_{{ $step->id }}" value="" placeholder="Antwoord"
+                                data-keywords="{{ json_encode($step->keywords->pluck('word')) }}">
                         </div>
 
                     @elseif ($step->question_type == 'tussenstap')
@@ -202,6 +198,7 @@
     @endsection
 
 
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         init();
@@ -217,6 +214,64 @@
 
 
 function init(){
+
+    // Array of success GIFs
+    const successGifs = [
+        'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcDdtY2JrY2N2Ynhxc3E2NWx0Z2E1Z2RwbWR6NXF6YnB0ZTFwYjh6eCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/xT5LMHxhOfscxPfIfm/giphy.gif', // thumbs up
+        'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExYXFxemRwZWRxbGx0Y2RqcWJ1NXdqbzNyM2Zha3BnNm8yYTdwcWJzaCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/YRuFixSNWFVcXaxpmX/giphy.gif', // success kid
+        'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMzR5Y3NyYmRkNnBxbWdxaWJyMWM2NHZ6ZnJnOXd0ZDdwbXJ5MXF6dyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3ohzdIuqJoo8QdKlnW/giphy.gif', // great job
+        'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbWVqbWRyYnVyYWFxbHd0NHhzZnlqcWRnbHRyeWFyaHBhOWZ0bHF1eiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/QJvwBSGaoc4eI/giphy.gif', // celebration
+        'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcWRyeXRwbGZnZm5xdnBhbmE2aW9xbzVxbm1yYnFtNmZxdWJyOHRybiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/artj92V8o75VPL7AeQ/giphy.gif'  // awesome
+    ];
+
+    // Function to get random GIF
+    const getRandomGif = () => {
+        return successGifs[Math.floor(Math.random() * successGifs.length)];
+    };
+
+    // Initialize Tingle modal
+    const modal = new tingle.modal({
+        footer: true,
+        stickyFooter: false,
+        closeMethods: ['overlay', 'button', 'escape'],
+        closeLabel: "Close",
+        cssClass: ['custom-modal']
+    });
+
+    // Add a button to the modal footer
+    modal.addFooterBtn('Ga verder', 'tingle-btn tingle-btn--primary', function() {
+        modal.close();
+        confetti({
+            particleCount: 100,
+            spread: 70,
+            origin: { y: 0.6 }
+        });
+    });
+
+    // Listen for changes on text inputs with keywords
+    document.querySelectorAll('input[type="text"][data-keywords]').forEach(input => {
+        input.addEventListener('change', (e) => {
+            const keywords = JSON.parse(e.target.dataset.keywords);
+            const enteredText = e.target.value.toLowerCase().trim();
+            
+            if (keywords.some(keyword => enteredText.includes(keyword.toLowerCase()))) {
+                const modalContent = `
+                    <div style="text-align: center; padding: 20px;">
+                        <div style="font-size: 48px; margin-bottom: 20px;">🎉</div>
+                        <h2 style="color: #2ecc71; margin-bottom: 15px;">Goed gedaan!</h2>
+                        <p style="font-size: 18px; margin-bottom: 15px;">Je hebt het juiste antwoord gegeven!</p>
+                        <img src="${getRandomGif()}" alt="Success!" style="max-width: 300px; margin: 20px auto; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                        <div style="background-color: #f8f9fa; padding: 15px; border-radius: 8px; margin-top: 20px;">
+                            <p style="color: #666; font-size: 16px;">Je kunt nu verder gaan naar de volgende vraag.</p>
+                            <p style="color: #666; font-style: italic; margin-top: 10px; text-align: right;">Klik op 'Ga verder' om door te gaan.</p>
+                        </div>
+                    </div>
+                `;
+                modal.setContent(modalContent);
+                modal.open();
+            }
+        });
+    });
 
     const debug = document.getElementById('debug');
     const prev = document.getElementById('prev');

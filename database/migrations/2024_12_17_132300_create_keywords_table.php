@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('cards', function (Blueprint $table) {
-            $table->dropColumn('due_date');
-            $table->string('priority')->default('medium'); // Can be low, medium, high
+        Schema::create('keywords', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('step_id')->constrained()->onDelete('cascade');
+            $table->string('word');
+            $table->timestamps();
         });
     }
 
@@ -22,9 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('cards', function (Blueprint $table) {
-            $table->timestamp('due_date')->nullable();
-            $table->dropColumn('priority');
-        });
+        Schema::dropIfExists('keywords');
     }
 };

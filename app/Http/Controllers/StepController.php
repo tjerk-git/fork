@@ -32,10 +32,33 @@ class StepController extends Controller
     // update the step
     public function update(Request $request, Scenario $scenario, Step $step)
     {
-
         $validatedData = $request->validate([
-            'attachment' => 'nullable|file|mimes:jpeg,png,jpg,gif,mp4|max:204800', // 200MB max, allow images and video files
+            'attachment' => 'nullable|file|mimes:jpeg,png,jpg,gif,mp4|max:204800',
+            'keywords' => 'nullable|array',
+            'keywords.*' => 'string|max:255'
         ]);
+
+        if($request->file('attachment')){
+            $file = $request->file('attachment');
+            $filename = date('YmdHi').$file->getClientOriginalName();
+            $file->move(public_path('attachments'), $filename);
+            $validatedData['attachment'] = $filename;
+        }
+
+        // Handle keywords if it's an open question
+        if ($step->question_type === 'open_question') {
+            // Delete existing keywords
+            $step->keywords()->delete();
+            
+            // Add new keywords if provided
+            if ($request->has('keywords')) {
+                foreach ($request->keywords as $word) {
+                    if (!empty(trim($word))) {
+                        $step->keywords()->create(['word' => $word]);
+                    }
+                }
+            }
+        }
 
         $validatedData['description'] = $request->description;
         $validatedData['fork_to_step'] = $request->fork_to_step;
@@ -47,13 +70,6 @@ class StepController extends Controller
         $validatedData['multiple_choice_option_1'] = $request->multiple_choice_option_1;
         $validatedData['multiple_choice_option_2'] = $request->multiple_choice_option_2;
         $validatedData['multiple_choice_option_3'] = $request->multiple_choice_option_3;
-
-        if($request->file('attachment')){
-            $file = $request->file('attachment');
-            $filename= date('YmdHi').$file->getClientOriginalName();
-            $file->move(public_path('public/images/'), $filename);
-            $validatedData['attachment']= $filename;
-        }
 
         // update using the validated data remove empty fields
         $step->update(array_filter($validatedData));
@@ -67,13 +83,15 @@ class StepController extends Controller
     {
         $validatedData = $request->validate([
             'attachment' => 'nullable|file|mimes:jpeg,png,jpg,gif,mp4|max:204800',
+            'keywords' => 'nullable|array',
+            'keywords.*' => 'string|max:255'
         ]);
 
         if($request->file('attachment')){
-            $file= $request->file('attachment');
-            $filename= date('YmdHi').$file->getClientOriginalName();
-            $file-> move(public_path('public/images/'), $filename);
-            $validatedData['attachment']= $filename;
+            $file = $request->file('attachment');
+            $filename = date('YmdHi').$file->getClientOriginalName();
+            $file->move(public_path('attachments'), $filename);
+            $validatedData['attachment'] = $filename;
         }else{
             $validatedData['attachment'] = null;
         }
@@ -99,12 +117,51 @@ class StepController extends Controller
             'multiple_choice_option_3' => $request->multiple_choice_option_3,
         ]);
 
-        // redirect to the scenario
+        // Add keywords if it's an open question
+        if ($request->has('keywords') && $request->question_type === 'open_question') {
+            foreach ($request->keywords as $word) {
+                if (!empty(trim($word))) {
+                    $step->keywords()->create(['word' => $word]);
+                }
+            }
+        }
+
         return redirect()->route('scenarios.show', $request->scenario_id);
     }
 
     public function edit(Scenario $scenario, Step $step)
     {
         return view('steps.edit', compact('scenario', 'step'));
+    }
+
+    public function updateKeyword(Request $request, Scenario $scenario, Step $step)
+    {
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'question_type' => 'required|string|in:open_question,code_question,multiple_choice',
+            'keywords' => 'nullable|array',
+            'keywords.*' => 'string|max:255'
+        ]);
+
+        $step->update([
+            'title' => $validated['title'],
+            'description' => $validated['description'],
+            'question_type' => $validated['question_type']
+        ]);
+
+        if ($step->question_type === 'open_question') {
+            // Delete existing keywords
+            $step->keywords()->delete();
+            
+            // Add new keywords
+            if ($request->has('keywords')) {
+                foreach ($request->keywords as $word) {
+                    $step->keywords()->create(['word' => $word]);
+                }
+            }
+        }
+
+        return redirect()->route('scenarios.edit', $scenario)->with('success', 'Step updated successfully.');
     }
 }

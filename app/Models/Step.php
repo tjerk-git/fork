@@ -8,6 +8,7 @@ use App\Models\Scenario;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Models\ResultLine;
+use App\Models\Keyword;
 
 class Step extends Model
 {
@@ -31,7 +32,7 @@ class Step extends Model
     ];
 
     // belongs to scenario
-    public function scenario()
+    public function scenario(): BelongsTo
     {
         return $this->belongsTo(Scenario::class);
     }
@@ -39,5 +40,10 @@ class Step extends Model
     public function resultLines(): HasMany
     {
         return $this->hasMany(ResultLine::class);
+    }
+
+    public function keywords()
+    {
+        return $this->hasMany(Keyword::class);
     }
 }

@@ -60,6 +60,28 @@
                    id="open_question" 
                    name="open_question"
                    value="{{ old('open_question') }}">
+            
+            {{-- Keywords Section --}}
+            <div id="keywords-section" class="mt-3">
+                <label>Sleutelwoorden</label>
+                <p>Wanneer een sleutelwoord gevonden wordt in een antwoord, krijgt de gebruiker een extra pop-up met daarin positieve feedback.</p>
+                <p>Voeg elk woord los toe</p>
+                <div id="keywords-container">
+                    @if(old('keywords'))
+                        @foreach(old('keywords') as $keyword)
+                            <div class="keyword-input">
+                                <input type="text" name="keywords[]" value="{{ $keyword }}" class="form-control" placeholder="Sleutelwoord" />
+                                <button type="button" class="btn btn-danger" onclick="removeKeyword(this)">
+                                Verwijder<i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        @endforeach
+                    @endif
+                </div>
+                <button type="button" class="btn btn-secondary mt-2" onclick="addKeyword()">
+                    <i class="fas fa-plus"></i>Voeg sleutelwoord toe 🔑
+                </button>
+            </div>
         </div>
 
 
@@ -152,6 +174,20 @@
     video {
         max-width: 600px;
     }
+    .keyword-input {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 10px;
+        align-items: center;
+       
+    }
+    .keyword-input input {
+        flex: 1;
+    }
+    .keyword-input button {
+        width: 40px;
+        padding: 5px;
+    }
 </style>
 @endpush
 
@@ -182,6 +218,33 @@
         const attachmentDiv = document.getElementById('attachment');
         this.style.display = 'none';
         attachmentDiv.style.display = 'block';
+    });
+
+    function addKeyword() {
+        const container = document.getElementById('keywords-container');
+        const div = document.createElement('div');
+        div.className = 'keyword-input';
+        div.innerHTML = `
+            <input type="text" name="keywords[]" class="form-control" />
+            <button type="button" class="btn btn-danger" onclick="removeKeyword(this)">
+                <i class="fas fa-times"></i>
+            </button>
+        `;
+        container.appendChild(div);
+    }
+
+    function removeKeyword(button) {
+        button.parentElement.remove();
+    }
+
+    // Show/hide keyword section based on question type
+    document.getElementById('question_type_selector').addEventListener('change', function() {
+        const keywordsSection = document.getElementById('keywords-section');
+        if (this.value === 'open_question') {
+            keywordsSection.style.display = 'block';
+        } else {
+            keywordsSection.style.display = 'none';
+        }
     });
 </script>
 @endsection
