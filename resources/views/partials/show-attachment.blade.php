@@ -16,17 +16,4 @@
                 alt="{{ $step->description ?? '' }}">
         @endif
     @endif
-
-    @include('partials.show-attachment')
-    @include('partials.add-attachment')
 </div>
-
-@push('scripts')
-<script>
-    document.getElementById('show_attachment')?.addEventListener('click', function() {
-        const attachmentDiv = document.getElementById('attachment');
-        this.style.display = 'none';
-        attachmentDiv.style.display = 'block';
-    });
-</script>
-@endpush

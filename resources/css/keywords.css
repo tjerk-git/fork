@@ -1,0 +1,44 @@
+.keyword-input {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+    align-items: center;
+}
+
+.keyword-input input {
+    flex: 1;
+}
+
+.keyword-input button {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.keyword-input button i {
+    margin-left: 5px;
+}
+
+#keywords-section {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
+#keywords-section label {
+    font-weight: bold;
+    margin-bottom: 10px;
+    display: block;
+}
+
+#keywords-section p {
+    color: #666;
+    margin-bottom: 15px;
+}
+
+#keywords-section .btn-secondary {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}

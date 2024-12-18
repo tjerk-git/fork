@@ -41,9 +41,10 @@ class StepController extends Controller
         if($request->file('attachment')){
             $file = $request->file('attachment');
             $filename = date('YmdHi').$file->getClientOriginalName();
-            $file->move(public_path('attachments'), $filename);
+            $file->move(public_path('public/images'), $filename);
             $validatedData['attachment'] = $filename;
         }
+
 
         // Handle keywords if it's an open question
         if ($step->question_type === 'open_question') {
@@ -74,8 +75,12 @@ class StepController extends Controller
         // update using the validated data remove empty fields
         $step->update(array_filter($validatedData));
 
-        // redirect to the scenario
-        return redirect()->route('steps.edit', [$scenario->id, $step->id]);
+        // redirect back with success message
+        return redirect()
+            ->route('steps.edit', [$scenario->id, $step->id])
+            ->with('success', 'Aangepast.')
+            ->withErrors($errors ?? [])
+            ->withInput();
     }
 
     // store the step
@@ -134,34 +139,4 @@ class StepController extends Controller
         return view('steps.edit', compact('scenario', 'step'));
     }
 
-    public function updateKeyword(Request $request, Scenario $scenario, Step $step)
-    {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
-            'question_type' => 'required|string|in:open_question,code_question,multiple_choice',
-            'keywords' => 'nullable|array',
-            'keywords.*' => 'string|max:255'
-        ]);
-
-        $step->update([
-            'title' => $validated['title'],
-            'description' => $validated['description'],
-            'question_type' => $validated['question_type']
-        ]);
-
-        if ($step->question_type === 'open_question') {
-            // Delete existing keywords
-            $step->keywords()->delete();
-            
-            // Add new keywords
-            if ($request->has('keywords')) {
-                foreach ($request->keywords as $word) {
-                    $step->keywords()->create(['word' => $word]);
-                }
-            }
-        }
-
-        return redirect()->route('scenarios.edit', $scenario)->with('success', 'Step updated successfully.');
-    }
 }

@@ -78,7 +78,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tingle/0.16.0/tingle.min.css" />
 
 <script defer=true src="https://cdnjs.cloudflare.com/ajax/libs/tingle/0.16.0/tingle.min.js"></script>
-<script defer=truesrc="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+<script defer=true src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
 
     @section('content')
 
@@ -103,13 +103,14 @@
                     @if ($step->question_type == 'intro')
                     
                    
-                    @include('partials.attachment')
+                    @include('partials.show-attachment')
+          
                     
 
                     <p>{{ $step->description }}</p>    
 
                     @elseif ($step->question_type == 'open_question')
-                        @include('partials.attachment')
+                    @include('partials.show-attachment')
                         <div class="form-group" id="open_question_div">
                             <label for="answer_{{ $step->id }}">{{ $step->open_question }}</label>
                             <input type="text" class="form-control" id="answer_{{ $step->id }}"
@@ -118,13 +119,13 @@
                         </div>
 
                     @elseif ($step->question_type == 'tussenstap')
-                        @include('partials.attachment')
+                    @include('partials.show-attachment')
                         <div class="form-group" id="tussenstap_div">
                             <p>{{ $step->description }}</p>
                         </div>
                     
                     @elseif ($step->question_type == 'multiple_choice_question')
-                        @include('partials.attachment')
+                    @include('partials.show-attachment')
                         <div class="form-group" id="multiple_c">
                             <p>{{ $step->multiple_choice_question }}</p>
                             

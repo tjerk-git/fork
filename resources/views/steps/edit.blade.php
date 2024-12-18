@@ -2,6 +2,30 @@
 
 @section('content')
 <div class="container">
+    <h1>
+        @if ($step->question_type === 'intro')
+            Introductie voor {{ $scenario->name }}
+        @else
+            Een vraag voor {{ $scenario->name }}
+        @endif
+    </h1>
+
+    @if(session('success'))
+        <article aria-label="Success message" style="background-color: #d1e7dd; border-color: #badbcc; color: #0f5132; margin-bottom: 1rem;">
+            {{ session('success') }}
+        </article>
+    @endif
+
+    @if($errors->any())
+        <article aria-label="Error message" style="background-color: #f8d7da; border-color: #f5c2c7; color: #842029; margin-bottom: 1rem;">
+            <ul style="margin: 0; padding-left: 1rem;">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </article>
+    @endif
+
     @php
         $referencingSteps = $scenario->steps->filter(function($otherStep) use ($step) {
             return $otherStep->fork_to_step == $step->id;
@@ -19,121 +43,70 @@
         </div>
     @endif
 
-    <h1>
-        @if ($step->question_type === 'intro')
-            Introductie voor {{ $scenario->name }}
-        @else
-            Een vraag voor {{ $scenario->name }}
-        @endif
-    </h1>
-
     <form action="{{ route('steps.update', ['step' => $step->id, 'scenario' => $scenario->id]) }}" 
           method="POST" 
           enctype="multipart/form-data">
         @csrf
         @method('PUT')
 
+        <input type="hidden" name="scenario_id" value="{{ $scenario->id }}">
+        <input type="hidden" name="question_type" value="{{ $step->question_type }}">
+
         {{-- Attachment Section --}}
-        @include('partials.attachment')
+        @include('partials.show-attachment')
+        @include('partials.add-attachment')
 
-        <div class="form-group" id="attachment">
-            <label for="attachment">Video of afbeelding aanpassen</label>
-            <input type="file" 
-                   class="form-control-file @error('attachment') is-invalid @enderror" 
-                   id="attachment"
-                   name="attachment">
-            @error('attachment')
-                <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
-        </div>
-
-        {{-- Introduction Content --}}
-        @if ($step->question_type == 'intro')
+        {{-- Open Question --}}
+        @if($step->question_type == 'open_question')
             <div class="form-group">
-                <label for="content">Omschrijving</label>
-                <textarea class="form-control @error('content') is-invalid @enderror" 
-                          id="description" 
-                          name="description"
-                          rows="3">{{ $step->description }}</textarea>
-                @error('description')
-                    <div class="invalid-feedback">{{ $description }}</div>
-                @enderror
-            </div>
-        @endif
-
-        {{-- Question Content --}}
-        @if ($step->question_type == 'open_question')
-            <div class="form-group" id="open_question_div">
                 <label for="open_question">Een open vraag</label>
                 <input type="text" 
                        class="form-control" 
                        id="open_question" 
                        name="open_question"
-                       value="{{ $step->open_question }}">
+                       value="{{ old('open_question', $step->open_question) }}">
                 
-                {{-- Keywords Section --}}
-                <div id="keywords-section" class="mt-3">
-                    <label>Sleutelwoorden</label>
-                    <p>Wanneer een sleutelwoord gevonden wordt in een antwoord, krijgt de gebruiker een extra pop-up met daarin positieve feedback.</p>
-                    <p>Voeg elk woord los toe</p>
-                    <div id="keywords-container">
-                        @foreach($step->keywords as $keyword)
-                            <div class="keyword-input">
-                                <input type="text" name="keywords[]" value="{{ $keyword->word }}" class="form-control" placeholder="Sleutelwoord" />
-                                <button type="button" class="btn btn-danger" onclick="removeKeyword(this)">
-                                    <i class="fas fa-times"></i>
-                                    Verwijder
-                                </button>
-                            </div>
-                        @endforeach
-                    </div>
-                    <button type="button" class="btn btn-secondary mt-2" onclick="addKeyword()">
-                    <i class="fas fa-plus"></i>Voeg sleutelwoord toe 🔑
-                    </button>
-                </div>
+                @include('partials.keywords-section')
             </div>
+        @endif
 
-            @elseif ($step->question_type == 'tussenstap')
-                <div class="form-group" id="tussenstap_div">
-                    <label for="description">Beschrijving</label>
-                    <textarea class="form-control" 
-                              id="description" 
-                              name="description" 
-                              rows="3">{{ $step->description }}</textarea>
-                </div>
-        @elseif ($step->question_type == 'multiple_choice_question')
-            <div class="form-group" id="multiple_c">
-                <label for="multiple_choice_question">Een meerkeuze vraag:</label>
+        {{-- Multiple Choice Question --}}
+        @if($step->question_type == 'multiple_choice_question')
+            <div class="form-group">
+                <label for="multiple_choice_question">Meerkeuze vraag</label>
                 <input type="text" 
                        class="form-control" 
                        id="multiple_choice_question" 
                        name="multiple_choice_question"
-                       value="{{ $step->multiple_choice_question }}">
+                       value="{{ old('multiple_choice_question', $step->multiple_choice_question) }}">
+            </div>
 
+            <div class="form-group">
                 <label for="multiple_choice_option_1">Optie 1</label>
                 <input type="text" 
                        class="form-control" 
-                       id="option_1" 
+                       id="multiple_choice_option_1" 
                        name="multiple_choice_option_1"
-                       value="{{ $step->multiple_choice_option_1 }}">
+                       value="{{ old('multiple_choice_option_1', $step->multiple_choice_option_1) }}">
+            </div>
 
+            <div class="form-group">
                 <label for="multiple_choice_option_2">Optie 2</label>
                 <input type="text" 
                        class="form-control" 
-                       id="option_2" 
+                       id="multiple_choice_option_2" 
                        name="multiple_choice_option_2"
-                       value="{{ $step->multiple_choice_option_2 }}">
+                       value="{{ old('multiple_choice_option_2', $step->multiple_choice_option_2) }}">
+            </div>
 
+            <div class="form-group">
                 <label for="multiple_choice_option_3">Optie 3</label>
                 <input type="text" 
                        class="form-control" 
-                       id="option_3" 
+                       id="multiple_choice_option_3" 
                        name="multiple_choice_option_3"
-                       value="{{ $step->multiple_choice_option_3 }}">
+                       value="{{ old('multiple_choice_option_3', $step->multiple_choice_option_3) }}">
             </div>
-
-   
-           
 
             {{-- Conditional Navigation --}}
             @if ($scenario->steps->count() > 0)
@@ -170,10 +143,18 @@
             @endif 
         @endif
 
-        {{-- Form Actions --}}
-        <div class="mt-4">
-            <button type="submit" class="btn btn-primary">Vraag opslaan</button>
-        </div>
+        {{-- Tussenstap --}}
+        @if($step->question_type == 'tussenstap')
+            <div class="form-group">
+                <label for="description">Beschrijving</label>
+                <textarea class="form-control" 
+                          id="description" 
+                          name="description" 
+                          rows="3">{{ old('description', $step->description) }}</textarea>
+            </div>
+        @endif
+
+        <button type="submit" class="btn btn-primary">Update vraag</button>
     </form>
 
     {{-- Delete Form --}}
@@ -189,52 +170,23 @@
                 Verwijder deze vraag
             </button>
         </form>
-        <a href="{{ route('scenarios.show', ['scenario' => $scenario->id]) }}" 
-           class="btn btn-secondary">
-            Terug naar scenario
-        </a>
     </div>
+
+    {{-- Form Actions --}}
+        <div class="mt-4">
+        
+            <a href="{{ route('scenarios.show', ['scenario' => $scenario->id]) }}" 
+               class="btn btn-secondary">
+                Terug naar scenario
+            </a>
+        </div>
 </div>
 
+
+
+@include('partials.keywords-scripts')
+
 @push('styles')
-<style>
-    video {
-        max-width: 600px;
-    }
-    .keyword-input {
-        display: flex;
-        gap: 10px;
-        margin-bottom: 10px;
-        align-items: center;
-    }
-    .keyword-input input {
-        flex: 1;
-    }
-    .keyword-input button {
-        width: 40px;
-        padding: 5px;
-    }
-</style>
+    <link rel="stylesheet" href="{{ asset('css/keywords.css') }}">
 @endpush
-
-
-<script>
-    function addKeyword() {
-        const container = document.getElementById('keywords-container');
-        const div = document.createElement('div');
-        div.className = 'keyword-input';
-        div.innerHTML = `
-            <input type="text" name="keywords[]" class="form-control" />
-            <button type="button" class="btn btn-danger" onclick="removeKeyword(this)">
-                <i class="fas fa-times"></i>
-            </button>
-        `;
-        container.appendChild(div);
-    }
-
-    function removeKeyword(button) {
-        button.parentElement.remove();
-    }
-</script>
-
 @endsection

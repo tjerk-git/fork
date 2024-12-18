@@ -9,8 +9,6 @@
           enctype="multipart/form-data">
         @csrf
         <input type="hidden" name="scenario_id" value="{{ $scenario->id }}">
-
-
         <input type="hidden" name="question_type" id="question_type">
 
         {{-- Question Type Selector --}}
@@ -25,65 +23,13 @@
         </div>
 
         {{-- Attachment Section --}}
-        <div class="form-group">
-            <button type="button" class="btn btn-link" id="show_attachment">
-                <i class="fas fa-plus"></i> Voeg een video of afbeelding toe
-            </button>
-
-            <div class="form-group" id="attachment" style="display:none;">
-                <label for="attachment">Video of afbeelding</label>
-                <input type="file" 
-                       class="form-control-file @error('attachment') is-invalid @enderror" 
-                       id="attachment"
-                       name="attachment">
-                @error('attachment')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
-            </div>
-        </div>
-
-
-        <div class="form-group" id="tussenstap_div" style="display:none;">
-            <label for="description">Beschrijving</label>
-            <textarea class="form-control" 
-                      id="description" 
-                      name="description" 
-                      rows="3">{{ old('description') }}</textarea>
-        </div>
-
+        @include('partials.show-attachment')
+        @include('partials.add-attachment')
 
         {{-- Open Question --}}
         <div class="form-group" id="open_question_div" style="display:none;">
-            <label for="open_question">Een open vraag</label>
-            <input type="text" 
-                   class="form-control" 
-                   id="open_question" 
-                   name="open_question"
-                   value="{{ old('open_question') }}">
-            
-            {{-- Keywords Section --}}
-            <div id="keywords-section" class="mt-3">
-                <label>Sleutelwoorden</label>
-                <p>Wanneer een sleutelwoord gevonden wordt in een antwoord, krijgt de gebruiker een extra pop-up met daarin positieve feedback.</p>
-                <p>Voeg elk woord los toe</p>
-                <div id="keywords-container">
-                    @if(old('keywords'))
-                        @foreach(old('keywords') as $keyword)
-                            <div class="keyword-input">
-                                <input type="text" name="keywords[]" value="{{ $keyword }}" class="form-control" placeholder="Sleutelwoord" />
-                                <button type="button" class="btn btn-danger" onclick="removeKeyword(this)">
-                                Verwijder<i class="fas fa-times"></i>
-                                </button>
-                            </div>
-                        @endforeach
-                    @endif
-                </div>
-                <button type="button" class="btn btn-secondary mt-2" onclick="addKeyword()">
-                    <i class="fas fa-plus"></i>Voeg sleutelwoord toe 🔑
-                </button>
-            </div>
+            @include('partials.keywords-section')
         </div>
-
 
         {{-- Multiple Choice Question --}}
         <div class="form-group" id="multiple_c" style="display:none;">
@@ -158,6 +104,15 @@
             @endif
         </div>
 
+        {{-- Tussenstap --}}
+        <div class="form-group" id="tussenstap_div" style="display:none;">
+            <label for="description">Beschrijving</label>
+            <textarea class="form-control" 
+                      id="description" 
+                      name="description" 
+                      rows="3">{{ old('description') }}</textarea>
+        </div>
+
         {{-- Form Actions --}}
         <div class="mt-4">
             <button type="submit" class="btn btn-primary">Voeg deze vraag toe aan het scenario</button>
@@ -169,36 +124,22 @@
     </form>
 </div>
 
+@include('partials.keywords-scripts')
+
 @push('styles')
-<style>
-    video {
-        max-width: 600px;
-    }
-    .keyword-input {
-        display: flex;
-        gap: 10px;
-        margin-bottom: 10px;
-        align-items: center;
-       
-    }
-    .keyword-input input {
-        flex: 1;
-    }
-    .keyword-input button {
-        width: 40px;
-        padding: 5px;
-    }
-</style>
+    <link rel="stylesheet" href="{{ asset('css/keywords.css') }}">
 @endpush
 
 <script>
     document.getElementById('question_type_selector').addEventListener('change', function() {
         const openQuestionDiv = document.getElementById('open_question_div');
         const multipleChoiceDiv = document.getElementById('multiple_c');
+        const tussenstapDiv = document.getElementById('tussenstap_div');
         const questionType = document.getElementById('question_type');
 
         openQuestionDiv.style.display = 'none';
         multipleChoiceDiv.style.display = 'none';
+        tussenstapDiv.style.display = 'none';
 
         if (this.value === 'open_question') {
             openQuestionDiv.style.display = 'block';
@@ -208,7 +149,6 @@
             questionType.value = 'multiple_choice_question';
         }
         else if (this.value === 'tussenstap') {
-            const tussenstapDiv = document.getElementById('tussenstap_div');
             tussenstapDiv.style.display = 'block';
             questionType.value = 'tussenstap';
         }
