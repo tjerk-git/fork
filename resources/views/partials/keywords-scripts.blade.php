@@ -17,14 +17,5 @@
         button.parentElement.remove();
     }
 
-    // Show/hide keyword section based on question type
-    document.getElementById('question_type_selector').addEventListener('change', function() {
-        const keywordsSection = document.getElementById('keywords-section');
-        if (this.value === 'open_question') {
-            keywordsSection.style.display = 'block';
-        } else {
-            keywordsSection.style.display = 'none';
-        }
-    });
 </script>
 @endpush

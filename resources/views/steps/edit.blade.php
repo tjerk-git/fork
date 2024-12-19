@@ -52,13 +52,23 @@
         <input type="hidden" name="scenario_id" value="{{ $scenario->id }}">
         <input type="hidden" name="question_type" value="{{ $step->question_type }}">
 
+        @if ($step->question_type == 'intro')
+            <div class="form-group">
+                <label for="description">Beschrijving</label>
+                <textarea class="form-control" 
+                          id="description" 
+                          name="description" 
+                          rows="3">{{ old('description', $step->description) }}</textarea>
+            </div>
+        @endif
+
         {{-- Attachment Section --}}
         @include('partials.show-attachment')
         @include('partials.add-attachment')
 
         {{-- Open Question --}}
         @if($step->question_type == 'open_question')
-            <div class="form-group">
+            <div class="form-group" id="open_question">
                 <label for="open_question">Een open vraag</label>
                 <input type="text" 
                        class="form-control" 

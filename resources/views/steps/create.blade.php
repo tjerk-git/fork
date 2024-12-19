@@ -27,7 +27,13 @@
         @include('partials.add-attachment')
 
         {{-- Open Question --}}
-        <div class="form-group" id="open_question_div" style="display:none;">
+        <div class="form-group" id="open_question" style="display:none;">
+            <label for="open_question">Een open vraag</label>
+            <input type="text" 
+                   class="form-control" 
+                   id="open_question" 
+                   name="open_question"
+                   value="{{ old('open_question') }}">
             @include('partials.keywords-section')
         </div>
 
@@ -132,7 +138,8 @@
 
 <script>
     document.getElementById('question_type_selector').addEventListener('change', function() {
-        const openQuestionDiv = document.getElementById('open_question_div');
+        console.log('change');
+        const openQuestionDiv = document.getElementById('open_question');
         const multipleChoiceDiv = document.getElementById('multiple_c');
         const tussenstapDiv = document.getElementById('tussenstap_div');
         const questionType = document.getElementById('question_type');
@@ -154,12 +161,6 @@
         }
     });
 
-    document.getElementById('show_attachment').addEventListener('click', function() {
-        const attachmentDiv = document.getElementById('attachment');
-        this.style.display = 'none';
-        attachmentDiv.style.display = 'block';
-    });
-
     function addKeyword() {
         const container = document.getElementById('keywords-container');
         const div = document.createElement('div');
@@ -177,14 +178,5 @@
         button.parentElement.remove();
     }
 
-    // Show/hide keyword section based on question type
-    document.getElementById('question_type_selector').addEventListener('change', function() {
-        const keywordsSection = document.getElementById('keywords-section');
-        if (this.value === 'open_question') {
-            keywordsSection.style.display = 'block';
-        } else {
-            keywordsSection.style.display = 'none';
-        }
-    });
 </script>
 @endsection
