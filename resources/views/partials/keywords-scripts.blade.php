@@ -1,4 +1,4 @@
-@push('scripts')
+
 <script>
     function addKeyword() {
         const container = document.getElementById('keywords-container');
@@ -18,4 +18,3 @@
     }
 
 </script>
-@endpush
