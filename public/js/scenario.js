@@ -121,6 +121,7 @@ function init() {
 
             if (index === steps.length - 1) {
                 next.style.display = "none";
+                showConfetti();
             }
         }
     });

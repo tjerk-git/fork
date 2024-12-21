@@ -172,25 +172,28 @@
             </div>
         @endif
 
-        <div class="flex justify-between items-center pt-6">
+        <div class="flex justify-end pt-6">
             <button type="submit" 
-                    class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 active:bg-primary-800 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors">
+                    class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2">
                 Update vraag
             </button>
-
-            <form action="{{ route('steps.destroy', ['step' => $step->id, 'scenario' => $scenario->id]) }}" 
-                  method="POST" 
-                  class="inline-block">
-                @csrf
-                @method('DELETE')
-                <button type="submit" 
-                        class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 active:bg-red-800 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors"
-                        onclick="return confirm('Weet je zeker dat je deze vraag wilt verwijderen?')">
-                    Verwijder deze vraag
-                </button>
-            </form>
         </div>
     </form>
+
+    <div class="border-t mt-8 pt-6">
+        <form action="{{ route('steps.destroy', ['step' => $step->id, 'scenario' => $scenario->id]) }}"
+              method="POST" 
+              onsubmit="return confirm('Weet je zeker dat je deze vraag wilt verwijderen?');"
+              class="flex justify-end">
+            @csrf
+            @method('DELETE')
+            <button type="submit"
+                    class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-destructive text-destructive-foreground hover:bg-destructive/90 h-10 px-4 py-2">
+                <i class="fas fa-trash-alt mr-2"></i>
+                Verwijder vraag
+            </button>
+        </form>
+    </div>
 </div>
 
 @include('partials.keywords-scripts')

@@ -8,9 +8,9 @@
 @section('content')
 <div class="max-w-4xl mx-auto p-6">
     @if (session('success'))
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 text-center">
-            <h1 class="text-3xl font-bold mb-4 text-gray-900 dark:text-gray-100">🎉 Bedankt voor je deelname! 🎉</h1>
-            <p class="text-lg text-gray-600 dark:text-gray-400 mb-8">{{ session('success') }}</p>
+        <div class="bg-card text-card-foreground rounded-lg shadow-lg p-8 text-center">
+            <h1 class="text-3xl font-bold mb-4">🎉 Bedankt voor je deelname! 🎉</h1>
+            <p class="text-lg text-muted-foreground mb-8">{{ session('success') }}</p>
             <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcDdtY2JxYjF1M245a3QxOTRxNnBxbXE4NHF6ZDVtN2txYmF1OWx6eCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/IwAZ6dvvvaTtdI8SD5/giphy.gif" 
                  alt="Thank you" 
                  class="max-w-[300px] mx-auto rounded-lg shadow-md">
@@ -29,48 +29,48 @@
                          @endif
                          @if ($index === 0) data-active="true" @endif>
                     
-                    <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">{{ $scenario->name }}</h1>
+                    <h1 class="text-2xl font-bold tracking-tight">{{ $scenario->name }}</h1>
 
                     @if ($step->question_type == 'intro')
                         @include('partials.show-attachment')
-                        <p class="text-lg text-gray-600 dark:text-gray-400 max-w-2xl">{{ $step->description }}</p>    
+                        <p class="text-lg text-muted-foreground max-w-2xl">{{ $step->description }}</p>    
 
                     @elseif ($step->question_type == 'open_question')
                         @include('partials.show-attachment')
                         <div class="w-full max-w-2xl space-y-4">
-                            <label for="answer_{{ $step->id }}" class="block text-sm font-medium text-gray-900 dark:text-gray-100">
+                            <label for="answer_{{ $step->id }}" class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                                 {{ $step->open_question }}
                             </label>
                             <input type="text" 
                                    id="answer_{{ $step->id }}"
                                    name="answer_{{ $step->id }}" 
-                                   class="w-full px-3 py-2 text-sm rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+                                   class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                                    placeholder="Antwoord"
                                    data-keywords="{{ json_encode($step->keywords->pluck('word')) }}">
                         </div>
 
                     @elseif ($step->question_type == 'tussenstap')
                         @include('partials.show-attachment')
-                        <p class="text-lg text-gray-600 dark:text-gray-400 max-w-2xl">{{ $step->description }}</p>
+                        <p class="text-lg text-muted-foreground max-w-2xl">{{ $step->description }}</p>
                     
                     @elseif ($step->question_type == 'multiple_choice_question')
                         @include('partials.show-attachment')
                         <div class="w-full max-w-2xl space-y-4">
-                            <p class="text-lg text-gray-600 dark:text-gray-400">{{ $step->multiple_choice_question }}</p>
+                            <p class="text-lg text-muted-foreground">{{ $step->multiple_choice_question }}</p>
                             
                             <div class="space-y-4">
-                                <h3 class="font-medium text-gray-900 dark:text-gray-100">Kies een antwoord</h3>
+                                <h3 class="font-medium">Kies een antwoord</h3>
                                 
-                                <div class="space-y-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
+                                <div class="space-y-4 bg-card text-card-foreground rounded-lg border shadow-sm p-4">
                                     @for ($i = 1; $i <= 3; $i++)
                                         @if ($step->{"multiple_choice_option_$i"})
-                                            <label class="flex items-center space-x-3 p-2 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer">
+                                            <label class="flex items-center space-x-3 p-2 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors cursor-pointer">
                                                 <input type="radio" 
                                                        id="answer_{{ $step->id }}_{{ $i }}" 
                                                        name="answer_{{ $step->id }}"
                                                        value="{{ $step->{"multiple_choice_option_$i"} }}"
-                                                       class="h-4 w-4 text-primary-600 border-gray-300 focus:ring-primary-500">
-                                                <span class="text-sm text-gray-900 dark:text-gray-100">
+                                                       class="h-4 w-4">
+                                                <span class="text-sm">
                                                     {{ $step->{"multiple_choice_option_$i"} }}
                                                 </span>
                                             </label>
@@ -85,31 +85,31 @@
                 @if ($loop->last)
                     <section class="slide hidden" data-slide="{{ $step->id + 2 }}">
                         <div class="w-full max-w-2xl space-y-6">
-                            <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Gegevens insturen</h1>
+                            <h1 class="text-2xl font-bold tracking-tight">Gegevens insturen</h1>
                             
                             <div class="space-y-4">
-                                <p class="text-gray-600 dark:text-gray-400">
+                                <p class="text-muted-foreground">
                                     Je kan nog terug om je antwoorden aan te passen, of je mag de resultaten opsturen.
                                     Tot die tijd zijn de resultaten <strong>niet</strong> opgestuurd.
                                 </p>
                             
-                                <p class="text-gray-600 dark:text-gray-400">
+                                <p class="text-muted-foreground">
                                     Mocht je de resultaten zelf willen bewaren en inzien, vul hieronder je e-mailadres in:
                                 </p>
                                 
                                 <div class="space-y-2">
-                                    <label for="email" class="block text-sm font-medium text-gray-900 dark:text-gray-100">
+                                    <label for="email" class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                                         E-mailadres
                                     </label>
                                     <input type="email" 
                                            id="email"
                                            name="email" 
-                                           class="w-full px-3 py-2 text-sm rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+                                           class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                                            placeholder="Je e-mailadres">
                                 </div>
 
                                 <button type="submit" 
-                                        class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 active:bg-primary-800 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors">
+                                        class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2">
                                     Gegevens opsturen
                                 </button>
                             </div>
@@ -120,11 +120,11 @@
 
             <div class="flex justify-between mt-8">
                 <button id="prev" 
-                        class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors">
+                        class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2">
                     Vorige stap
                 </button>
                 <button id="next"
-                        class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 active:bg-primary-800 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors">
+                        class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2">
                     Volgende stap
                 </button>
             </div>
