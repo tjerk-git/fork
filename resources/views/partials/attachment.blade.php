@@ -1,20 +1,27 @@
-<div class="attachment_container">
+<div class="space-y-6">
     @if(isset($step) && $step->attachment)
         @php
             $fileExtension = strtolower(pathinfo($step->attachment, PATHINFO_EXTENSION));
             $isVideo = $fileExtension === 'mp4';
         @endphp
         
-        @if ($isVideo)
-            <video controls style="height: 300px;">
-                <source src="{{ url('public/images/'.$step->attachment) }}" type="video/{{ $fileExtension }}">
-                Your browser does not support the video tag.
-            </video>
-        @else
-            <img src="{{ url('public/images/'.$step->attachment) }}" 
-                style="height: 300px; width: 550px; object-fit: cover;" 
-                alt="{{ $step->description ?? '' }}">
-        @endif
+        <div class="relative w-full rounded-lg border bg-card">
+            @if ($isVideo)
+                <video 
+                    controls 
+                    class="w-full max-h-[300px] rounded-lg object-cover"
+                >
+                    <source src="{{ url('public/images/'.$step->attachment) }}" type="video/{{ $fileExtension }}">
+                    <p class="text-sm text-muted-foreground">Your browser does not support the video tag.</p>
+                </video>
+            @else
+                <img 
+                    src="{{ url('public/images/'.$step->attachment) }}" 
+                    class="w-full h-[300px] rounded-lg object-cover"
+                    alt="{{ $step->description ?? '' }}"
+                >
+            @endif
+        </div>
     @endif
 
     @include('partials.show-attachment')

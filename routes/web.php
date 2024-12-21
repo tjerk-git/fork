@@ -6,8 +6,6 @@ use App\Http\Controllers\ScenarioController;
 use App\Http\Controllers\StepController;
 use App\Http\Controllers\ResultsController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\PlanningController;
-
 
 // Home route
 Route::get('/', function () {
@@ -37,17 +35,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/results/{scenario}', [ResultsController::class, 'show'])->name('results.show');
 
     Route::get('/scenarios/{scenario}/results/csv', [ResultsController::class, 'createCSV'])->name('results.csv');
-
-    // Planning routes
-    Route::get('/planning', [PlanningController::class, 'index'])->name('planning.index');
-    Route::post('/planning/boards', [PlanningController::class, 'storeBoard'])->name('planning.boards.store');
-    Route::patch('/planning/boards/{board}', [PlanningController::class, 'updateBoard'])->name('planning.boards.update');
-    Route::delete('/planning/boards/{board}', [PlanningController::class, 'destroyBoard'])->name('planning.boards.destroy');
-    
-    Route::post('/planning/cards', [PlanningController::class, 'storeCard'])->name('planning.cards.store');
-    Route::patch('/planning/cards/{card}', [PlanningController::class, 'updateCard'])->name('planning.cards.update');
-    Route::patch('/planning/cards/{card}/position', [PlanningController::class, 'updateCardPosition'])->name('planning.cards.position');
-    Route::delete('/planning/cards/{card}', [PlanningController::class, 'destroyCard'])->name('planning.cards.destroy');
 });
 
 // Public routes

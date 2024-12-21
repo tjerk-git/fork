@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <h1>
+<div class="container mx-auto px-4 py-8 max-w-4xl">
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">
         @if ($step->question_type === 'intro')
             Introductie voor {{ $scenario->name }}
         @else
@@ -11,19 +11,19 @@
     </h1>
 
     @if(session('success'))
-        <article aria-label="Success message" style="background-color: #d1e7dd; border-color: #badbcc; color: #0f5132; margin-bottom: 1rem;">
-            {{ session('success') }}
-        </article>
+        <div class="bg-green-50 dark:bg-green-900 border border-green-200 dark:border-green-800 rounded-lg p-4 mb-6">
+            <p class="text-green-800 dark:text-green-200">{{ session('success') }}</p>
+        </div>
     @endif
 
     @if($errors->any())
-        <article aria-label="Error message" style="background-color: #f8d7da; border-color: #f5c2c7; color: #842029; margin-bottom: 1rem;">
-            <ul style="margin: 0; padding-left: 1rem;">
+        <div class="bg-red-50 dark:bg-red-900 border border-red-200 dark:border-red-800 rounded-lg p-4 mb-6">
+            <ul class="list-disc list-inside">
                 @foreach($errors->all() as $error)
-                    <li>{{ $error }}</li>
+                    <li class="text-red-800 dark:text-red-200">{{ $error }}</li>
                 @endforeach
             </ul>
-        </article>
+        </div>
     @endif
 
     @php
@@ -33,9 +33,9 @@
     @endphp
     
     @if($referencingSteps->count() > 0)
-        <div class="alert alert-info">
-            <strong>Deze stap wordt gebruikt als doorverwijzing door:</strong>
-            <ul>
+        <div class="bg-blue-50 dark:bg-blue-900 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-6">
+            <strong class="block text-blue-800 dark:text-blue-200 mb-2">Deze stap wordt gebruikt als doorverwijzing door:</strong>
+            <ul class="list-disc list-inside text-blue-700 dark:text-blue-300">
                 @foreach($referencingSteps as $referencingStep)
                     <li>Vraag: {{ $referencingStep->multiple_choice_question }} (wanneer optie {{ $referencingStep->fork_condition }} wordt gekozen)</li>
                 @endforeach
@@ -45,7 +45,8 @@
 
     <form action="{{ route('steps.update', ['step' => $step->id, 'scenario' => $scenario->id]) }}" 
           method="POST" 
-          enctype="multipart/form-data">
+          enctype="multipart/form-data"
+          class="space-y-6">
         @csrf
         @method('PUT')
 
@@ -53,9 +54,11 @@
         <input type="hidden" name="question_type" value="{{ $step->question_type }}">
 
         @if ($step->question_type == 'intro')
-            <div class="form-group">
-                <label for="description">Beschrijving</label>
-                <textarea class="form-control" 
+            <div class="space-y-2">
+                <label for="description" class="block text-sm font-medium text-gray-900 dark:text-gray-100">
+                    Beschrijving
+                </label>
+                <textarea class="w-full px-3 py-2 text-sm rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors" 
                           id="description" 
                           name="description" 
                           rows="3">{{ old('description', $step->description) }}</textarea>
@@ -68,10 +71,12 @@
 
         {{-- Open Question --}}
         @if($step->question_type == 'open_question')
-            <div class="form-group" id="open_question">
-                <label for="open_question">Een open vraag</label>
+            <div class="space-y-2">
+                <label for="open_question" class="block text-sm font-medium text-gray-900 dark:text-gray-100">
+                    Een open vraag
+                </label>
                 <input type="text" 
-                       class="form-control" 
+                       class="w-full px-3 py-2 text-sm rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors" 
                        id="open_question" 
                        name="open_question"
                        value="{{ old('open_question', $step->open_question) }}">
@@ -82,121 +87,111 @@
 
         {{-- Multiple Choice Question --}}
         @if($step->question_type == 'multiple_choice_question')
-            <div class="form-group">
-                <label for="multiple_choice_question">Meerkeuze vraag</label>
-                <input type="text" 
-                       class="form-control" 
-                       id="multiple_choice_question" 
-                       name="multiple_choice_question"
-                       value="{{ old('multiple_choice_question', $step->multiple_choice_question) }}">
-            </div>
-
-            <div class="form-group">
-                <label for="multiple_choice_option_1">Optie 1</label>
-                <input type="text" 
-                       class="form-control" 
-                       id="multiple_choice_option_1" 
-                       name="multiple_choice_option_1"
-                       value="{{ old('multiple_choice_option_1', $step->multiple_choice_option_1) }}">
-            </div>
-
-            <div class="form-group">
-                <label for="multiple_choice_option_2">Optie 2</label>
-                <input type="text" 
-                       class="form-control" 
-                       id="multiple_choice_option_2" 
-                       name="multiple_choice_option_2"
-                       value="{{ old('multiple_choice_option_2', $step->multiple_choice_option_2) }}">
-            </div>
-
-            <div class="form-group">
-                <label for="multiple_choice_option_3">Optie 3</label>
-                <input type="text" 
-                       class="form-control" 
-                       id="multiple_choice_option_3" 
-                       name="multiple_choice_option_3"
-                       value="{{ old('multiple_choice_option_3', $step->multiple_choice_option_3) }}">
-            </div>
-
-            {{-- Conditional Navigation --}}
-            @if ($scenario->steps->count() > 0)
-                <div class="form-group">
-                    <label for="fork_condition">Conditie voor doorverwijzing</label>
-                    <select class="form-control" id="fork_condition" name="fork_condition">
-                        <option value="">Selecteer een optie</option>
-                        <option value="1" {{ $step->fork_condition == '1' ? 'selected' : '' }}>Optie 1</option>
-                        <option value="2" {{ $step->fork_condition == '2' ? 'selected' : '' }}>Optie 2</option>
-                        <option value="3" {{ $step->fork_condition == '3' ? 'selected' : '' }}>Optie 3</option>
-                    </select>
+            <div class="space-y-6">
+                <div class="space-y-2">
+                    <label for="multiple_choice_question" class="block text-sm font-medium text-gray-900 dark:text-gray-100">
+                        Meerkeuze vraag
+                    </label>
+                    <input type="text" 
+                           class="w-full px-3 py-2 text-sm rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors" 
+                           id="multiple_choice_question" 
+                           name="multiple_choice_question"
+                           value="{{ old('multiple_choice_question', $step->multiple_choice_question) }}">
                 </div>
 
-                <div class="form-group">
-                    <label for="previous_step_id">Link naar andere vraag</label>
-                    <select class="form-control" id="fork_to_step" name="fork_to_step">
-                        <option value="" {{ !$step->fork_to_step ? 'selected' : '' }}>Naar volgende vraag</option>
-                        @foreach ($scenario->steps->filter(function($otherStep) use ($step) { 
-                            return $otherStep->id !== $step->id && $otherStep->question_type !== 'intro'; 
-                        }) as $otherStep)
-                            <option value="{{ $otherStep->id }}" 
-                                    {{ $step->fork_to_step == $otherStep->id ? 'selected' : '' }}>
-                                Naar vraag: 
-                                
-                                @if ($otherStep->question_type == 'open_question')
-                                    {{ $otherStep->open_question }}
-                                @elseif ($otherStep->question_type == 'multiple_choice_question')
-                                    {{ $otherStep->multiple_choice_question }}
-                                @endif
+                @for ($i = 1; $i <= 3; $i++)
+                    <div class="space-y-2">
+                        <label for="multiple_choice_option_{{ $i }}" class="block text-sm font-medium text-gray-900 dark:text-gray-100">
+                            Optie {{ $i }}
+                        </label>
+                        <input type="text" 
+                               class="w-full px-3 py-2 text-sm rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors" 
+                               id="multiple_choice_option_{{ $i }}" 
+                               name="multiple_choice_option_{{ $i }}"
+                               value="{{ old('multiple_choice_option_' . $i, $step->{'multiple_choice_option_' . $i}) }}">
+                    </div>
+                @endfor
+
+                {{-- Conditional Navigation --}}
+                @if ($scenario->steps->count() > 0)
+                    <div class="space-y-2">
+                        <label for="fork_condition" class="block text-sm font-medium text-gray-900 dark:text-gray-100">
+                            Conditie voor doorverwijzing
+                        </label>
+                        <select class="w-full px-3 py-2 text-sm rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors" 
+                                id="fork_condition" 
+                                name="fork_condition">
+                            <option value="">Selecteer een optie</option>
+                            @for ($i = 1; $i <= 3; $i++)
+                                <option value="{{ $i }}" {{ $step->fork_condition == $i ? 'selected' : '' }}>
+                                    Optie {{ $i }}
+                                </option>
+                            @endfor
+                        </select>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label for="fork_to_step" class="block text-sm font-medium text-gray-900 dark:text-gray-100">
+                            Link naar andere vraag
+                        </label>
+                        <select class="w-full px-3 py-2 text-sm rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors" 
+                                id="fork_to_step" 
+                                name="fork_to_step">
+                            <option value="" {{ !$step->fork_to_step ? 'selected' : '' }}>
+                                Naar volgende vraag
                             </option>
-                        @endforeach
-                    </select>
-                </div>
-            @endif 
+                            @foreach ($scenario->steps->filter(function($otherStep) use ($step) { 
+                                return $otherStep->id !== $step->id && $otherStep->question_type !== 'intro'; 
+                            }) as $otherStep)
+                                <option value="{{ $otherStep->id }}" 
+                                        {{ $step->fork_to_step == $otherStep->id ? 'selected' : '' }}>
+                                    Naar vraag: 
+                                    @if ($otherStep->question_type == 'open_question')
+                                        {{ $otherStep->open_question }}
+                                    @elseif ($otherStep->question_type == 'multiple_choice_question')
+                                        {{ $otherStep->multiple_choice_question }}
+                                    @endif
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                @endif 
+            </div>
         @endif
 
         {{-- Tussenstap --}}
         @if($step->question_type == 'tussenstap')
-            <div class="form-group">
-                <label for="description">Beschrijving</label>
-                <textarea class="form-control" 
+            <div class="space-y-2">
+                <label for="description" class="block text-sm font-medium text-gray-900 dark:text-gray-100">
+                    Beschrijving
+                </label>
+                <textarea class="w-full px-3 py-2 text-sm rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors" 
                           id="description" 
                           name="description" 
                           rows="3">{{ old('description', $step->description) }}</textarea>
             </div>
         @endif
 
-        <button type="submit" class="btn btn-primary">Update vraag</button>
-    </form>
-
-    {{-- Delete Form --}}
-    <div class="mt-3">
-        <form action="{{ route('steps.destroy', ['step' => $step->id, 'scenario' => $scenario->id]) }}" 
-              method="POST" 
-              style="display:inline;">
-            @csrf
-            @method('DELETE')
+        <div class="flex justify-between items-center pt-6">
             <button type="submit" 
-                    class="btn btn-danger outline danger"
-                    onclick="return confirm('Weet je zeker dat je deze vraag wilt verwijderen?')">
-                Verwijder deze vraag
+                    class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 active:bg-primary-800 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors">
+                Update vraag
             </button>
-        </form>
-    </div>
 
-    {{-- Form Actions --}}
-        <div class="mt-4">
-        
-            <a href="{{ route('scenarios.show', ['scenario' => $scenario->id]) }}" 
-               class="btn btn-secondary">
-                Terug naar scenario
-            </a>
+            <form action="{{ route('steps.destroy', ['step' => $step->id, 'scenario' => $scenario->id]) }}" 
+                  method="POST" 
+                  class="inline-block">
+                @csrf
+                @method('DELETE')
+                <button type="submit" 
+                        class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 active:bg-red-800 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors"
+                        onclick="return confirm('Weet je zeker dat je deze vraag wilt verwijderen?')">
+                    Verwijder deze vraag
+                </button>
+            </form>
         </div>
+    </form>
 </div>
 
-
-
 @include('partials.keywords-scripts')
-
-@push('styles')
-    <link rel="stylesheet" href="{{ asset('css/keywords.css') }}">
-@endpush
 @endsection

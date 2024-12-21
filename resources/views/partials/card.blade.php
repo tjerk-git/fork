@@ -1,67 +1,70 @@
-<div class="card-item" data-id="{{ $card->id }}">
-    <div class="card-header">
-        <h5 class="card-title">{{ $card->title }}</h5>
-        <div class="dropdown">
-            <button class="outline" type="button" data-bs-toggle="dropdown">
+<div class="group relative rounded-lg border bg-card p-4 hover:shadow-sm" data-id="{{ $card->id }}">
+    <div class="flex items-start justify-between">
+        <h5 class="text-base font-medium leading-none">{{ $card->title }}</h5>
+        <div class="relative">
+            <button class="inline-flex h-8 w-8 items-center justify-center rounded-md border border-input bg-background p-0 text-sm font-medium ring-offset-background transition-colors hover:bg-accent hover:text-accent-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2" 
+                    type="button" 
+                    onclick="toggleDropdown(event)">
                 <i class="fas fa-ellipsis-v"></i>
             </button>
-            <ul>
-                <li><a href="#" onclick="editCard({{ $card->id }})">Bewerken</a></li>
-                <li><a href="#" class="delete" onclick="deleteCard({{ $card->id }})">Verwijderen</a></li>
+            <ul class="absolute right-0 top-full z-50 mt-1 hidden min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md" 
+                data-dropdown>
+                <li>
+                    <a href="#" 
+                       onclick="editCard({{ $card->id }})" 
+                       class="relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground">
+                        Bewerken
+                    </a>
+                </li>
+                <li>
+                    <a href="#" 
+                       onclick="deleteCard({{ $card->id }})" 
+                       class="relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm text-destructive outline-none hover:bg-destructive hover:text-destructive-foreground">
+                        Verwijderen
+                    </a>
+                </li>
             </ul>
         </div>
     </div>
     @if($card->description)
-        <p class="card-text">{{ Str::limit($card->description, 100) }}</p>
+        <p class="mt-2 text-sm text-muted-foreground">{{ Str::limit($card->description, 100) }}</p>
     @endif
     @if($card->due_date)
-        <small class="due-date" data-date="{{ $card->due_date }}">
-            <i class="far fa-clock"></i> {{ \Carbon\Carbon::parse($card->due_date)->format('d-m-Y') }}
-        </small>
+        <div class="mt-3 flex items-center text-xs text-muted-foreground">
+            <i class="far fa-clock mr-1"></i>
+            <span data-date="{{ $card->due_date }}">
+                {{ \Carbon\Carbon::parse($card->due_date)->format('d-m-Y') }}
+            </span>
+        </div>
     @endif
 </div>
 
-<style>
-    .card-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        margin-bottom: 0.5rem;
+<script>
+function toggleDropdown(event) {
+    event.preventDefault();
+    const button = event.currentTarget;
+    const dropdown = button.nextElementSibling;
+    const isVisible = !dropdown.classList.contains('hidden');
+    
+    // Hide all other dropdowns
+    document.querySelectorAll('[data-dropdown]').forEach(d => {
+        if (d !== dropdown) d.classList.add('hidden');
+    });
+    
+    // Toggle current dropdown
+    dropdown.classList.toggle('hidden');
+    
+    // Close dropdown when clicking outside
+    if (!isVisible) {
+        const closeDropdown = (e) => {
+            if (!dropdown.contains(e.target) && !button.contains(e.target)) {
+                dropdown.classList.add('hidden');
+                document.removeEventListener('click', closeDropdown);
+            }
+        };
+        setTimeout(() => {
+            document.addEventListener('click', closeDropdown);
+        }, 0);
     }
-
-    .card-title {
-        margin: 0;
-        font-size: 1rem;
-        font-weight: 500;
-    }
-
-    .card-text {
-        margin: 0.5rem 0;
-        font-size: 0.9rem;
-    }
-
-    .due-date {
-        display: block;
-        margin-top: 0.5rem;
-        color: var(--muted-color);
-    }
-
-    .dropdown button {
-        padding: 0.25rem 0.5rem;
-        margin: -0.25rem -0.5rem 0 0;
-    }
-
-    .dropdown ul {
-        min-width: 120px;
-        padding: 0.5rem;
-        margin: 0;
-        list-style: none;
-        background: var(--card-background-color);
-        border-radius: var(--border-radius);
-        box-shadow: var(--card-box-shadow);
-    }
-
-    .dropdown ul li:not(:last-child) {
-        margin-bottom: 0.25rem;
-    }
-</style>
+}
+</script>

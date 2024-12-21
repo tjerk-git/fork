@@ -1,24 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="en" class="light">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $title ?? 'FORK' }}</title>
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
-    <link rel="stylesheet" href="{{ asset('css/frontend.css') }}">
-
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body>
-    <header>
+<body class="min-h-screen bg-background font-sans antialiased">
+    <div class="relative flex min-h-screen flex-col">
+        <header class="supports-backdrop-blur:bg-background/60 sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur">
+            <div class="container flex h-14 items-center">
+                <!-- Add your header content here -->
+            </div>
+        </header>
 
-    </header>
-    <main class="container">
-        @yield('content')
-    </main>
+        <main class="flex-1 container mx-auto py-6">
+            @yield('content')
+        </main>
+    </div>
 </body>
-
 </html>
