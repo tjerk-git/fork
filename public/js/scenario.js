@@ -10,7 +10,9 @@ function showConfetti() {
     });
 }
 
-function init() {
+
+
+function replaceName(name){
     // search all text on the page for double brackets
     const textWithBrackets = document.body.innerHTML;
     const textWithBracketsArray = textWithBrackets.match(/\[\[(.*?)\]\]/g);
@@ -20,11 +22,14 @@ function init() {
         for (let i = 0; i < textWithBracketsArray.length; i++) {
             const textWithBracketsArrayElement = textWithBracketsArray[i];
             const textWithBracketsArrayElementClean = textWithBracketsArrayElement.replace(/[\[\]]/g, '');
-            const textWithBracketsArrayElementCleanReplaced = textWithBracketsArrayElementClean.replace('naam', 'Tjerk');
+            const textWithBracketsArrayElementCleanReplaced = textWithBracketsArrayElementClean.replace('naam', name);
 
             document.body.innerHTML = document.body.innerHTML.replace(textWithBracketsArrayElement, textWithBracketsArrayElementCleanReplaced);
         }
     }
+}
+
+function init() {
 
     // Array of success GIFs
     const successGifs = [
@@ -94,16 +99,16 @@ function init() {
 
         const currentStep = document.querySelector(`[data-slide="${steps[index]}"]`);
         const radioInputs = currentStep.querySelectorAll('input[type="radio"]');
+
+        const condition = currentStep.dataset.condition;
+        const forkStep = parseInt(currentStep.dataset.forkStep);
         
-        if (radioInputs.length > 0) {
+        if (radioInputs.length > 0 && forkStep && condition) {
             const selectedOption = Array.from(radioInputs).find(input => input.checked);
             if (!selectedOption) {
                 alert('Selecteer een antwoord voordat je verder gaat.');
                 return;
             }
-
-            const condition = currentStep.dataset.condition;
-            const forkStep = parseInt(currentStep.dataset.forkStep);
 
             if (selectedOption.value === condition) {
                 removeNumbers([forkStep]);

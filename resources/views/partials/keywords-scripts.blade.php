@@ -1,27 +1,4 @@
 <script>
-    document.getElementById('question_type_selector')?.addEventListener('change', function() {
-        const openQuestionDiv = document.getElementById('open_question');
-        const multipleChoiceDiv = document.getElementById('multiple_c');
-        const tussenstapDiv = document.getElementById('tussenstap_div');
-        const questionType = document.getElementById('question_type');
-
-        openQuestionDiv.style.display = 'none';
-        multipleChoiceDiv.style.display = 'none';
-        tussenstapDiv.style.display = 'none';
-
-        if (this.value === 'open_question') {
-            openQuestionDiv.style.display = 'block';
-            questionType.value = 'open_question';
-        } else if (this.value === 'multiple_c') {
-            multipleChoiceDiv.style.display = 'block';
-            questionType.value = 'multiple_choice_question';
-        }
-        else if (this.value === 'tussenstap') {
-            tussenstapDiv.style.display = 'block';
-            questionType.value = 'tussenstap';
-        }
-    });
-
     function addKeyword() {
         const container = document.getElementById('keywords-container');
         const div = document.createElement('div');
