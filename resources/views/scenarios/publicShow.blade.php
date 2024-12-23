@@ -16,7 +16,7 @@
                  class="max-w-[300px] mx-auto rounded-lg shadow-md">
         </div>
     @else
-        <form method="POST" action="{{ route('results.store') }}" class="space-y-8">
+        <form method="POST" action="{{ route('results.store') }}" class="space-y-8" id="scenario-form">
             <input type="hidden" name="scenario_id" value="{{ $scenario->id }}">
             @csrf
 
@@ -37,7 +37,7 @@
 
                         <div class="w-full max-w-2xl space-y-4">
                             <label for="name" class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                                Je naam
+                                Hoe heet je?
                             </label>
                             <input type="text" 
                                    id="name"
@@ -50,7 +50,7 @@
                         @include('partials.show-attachment')
                         <div class="w-full max-w-2xl space-y-4">
                             <label for="answer_{{ $step->id }}" class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                                {{ $step->open_question }}
+                                <p class="text-lg text-muted-foreground">{{ $step->open_question }}</p>
                             </label>
                             <input type="text" 
                                    id="answer_{{ $step->id }}"

@@ -13,23 +13,33 @@ function showConfetti() {
 
 
 function replaceName(name){
-    // search all text on the page for double brackets
-    const textWithBrackets = document.body.innerHTML;
-    const textWithBracketsArray = textWithBrackets.match(/\[\[(.*?)\]\]/g);
 
-    // replace [[naam]] with Tjerk 
-    if (textWithBracketsArray) {
-        for (let i = 0; i < textWithBracketsArray.length; i++) {
-            const textWithBracketsArrayElement = textWithBracketsArray[i];
-            const textWithBracketsArrayElementClean = textWithBracketsArrayElement.replace(/[\[\]]/g, '');
-            const textWithBracketsArrayElementCleanReplaced = textWithBracketsArrayElementClean.replace('naam', name);
+    //console.log(name);
 
-            document.body.innerHTML = document.body.innerHTML.replace(textWithBracketsArrayElement, textWithBracketsArrayElementCleanReplaced);
-        }
-    }
+    // get all p tags
+    // search all p tags for the name
+    document.querySelectorAll('p').forEach(p => {
+        // replace [[name]] with the name
+        p.innerHTML = p.innerHTML.replace(/\[\[naam\]\]/g, name);
+    });
 }
 
+// listen for on change on the name input
+document.getElementById('name').addEventListener('change', function() {
+    console.log(this.value);
+    replaceName(this.value);
+});
+
+
 function init() {
+
+
+    // get the scenario form
+    const scenarioForm = document.getElementById('scenario-form');
+    // prevent default form submission
+    scenarioForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+    });
 
     // Array of success GIFs
     const successGifs = [
