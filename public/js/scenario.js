@@ -24,11 +24,14 @@ function replaceName(name){
     });
 }
 
-// listen for on change on the name input
-document.getElementById('name').addEventListener('change', function() {
-    console.log(this.value);
-    replaceName(this.value);
-});
+// check if the name input exists
+if (document.getElementById('name')) {
+   // listen for on change on the name input
+    document.getElementById('name').addEventListener('change', function() {
+        console.log(this.value);
+        replaceName(this.value);
+    });
+}
 
 
 function init() {

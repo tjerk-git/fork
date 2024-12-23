@@ -44,6 +44,23 @@
                     </div>
 
                     <div class="space-y-2">
+                        <div class="flex items-center space-x-2">
+                            <input type="checkbox" 
+                                   id="ask_for_name" 
+                                   name="ask_for_name" 
+                                   class="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+
+                                   {{ old('ask_for_name', $scenario->ask_for_name) ? 'checked' : '' }}>
+                            <label for="ask_for_name" class="text-sm font-medium text-gray-900 dark:text-gray-100">
+                                Vraag om naam
+                            </label>
+                        </div>
+                        <p class="text-sm text-muted-foreground">
+                             Wanneer ingeschakeld wordt er aan het begin van het scenario gevraagd om een naam, deze is vervolgens in he scenario te gebruiken met [[naam]]
+                        </p>
+                    </div>
+
+                    <div class="space-y-2">
                         <label for="access_code" class="block text-sm font-medium text-gray-900 dark:text-gray-100">
                             Toegangscode
                         </label>
@@ -88,7 +105,7 @@
                         Annuleren
                     </a>
                     <button type="submit" 
-                            class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 active:bg-primary-800 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:hover:bg-primary-400">
+                            class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2">
                         Opslaan
                     </button>
                 </div>

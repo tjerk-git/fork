@@ -35,6 +35,7 @@ class ScenarioController extends Controller
             'name' => 'required|max:255',
             'is_public' => 'boolean',
             'access_code' => 'nullable|string|min:6|max:20',
+            'ask_for_name' => 'boolean',
         ]);
 
 
@@ -83,6 +84,12 @@ class ScenarioController extends Controller
         //     'is_public' => 'boolean',
         //     'access_code' => 'nullable|string|min:4|max:20',
         // ]);
+
+        // if there is no ask_for_name field, set it to false
+        if (!isset($request->ask_for_name)) {
+            $request->merge(['ask_for_name' => false]);
+        }
+
     
         $scenario->update($request->all());
 

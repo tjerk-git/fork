@@ -10,12 +10,16 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 
-
 class Scenario extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'description', 'user_id', 'attachment', 'slug', 'access_code', 'is_public'];
+    protected $fillable = ['name', 'description', 'user_id', 'attachment', 'slug', 'access_code', 'is_public', 'ask_for_name'];
+
+    protected $casts = [
+        'ask_for_name' => 'boolean',
+        'is_public' => 'boolean',
+    ];
 
     public function user()
     {
@@ -53,13 +57,15 @@ class Scenario extends Model
         });
 
         static::updating(function ($scenario) {
+        if ($scenario->isDirty('name')) {
             $slug = Str::slug($scenario->name) . '-' . Str::random(8);
 
             while (Scenario::where('slug', $slug)->exists()) {
-            $slug = Str::slug($scenario->name) . '-' . Str::random(8);
+                $slug = Str::slug($scenario->name) . '-' . Str::random(8);
             }
 
             $scenario->slug = $slug;
+        }
         });
     }
 }

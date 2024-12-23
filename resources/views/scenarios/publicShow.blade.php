@@ -21,7 +21,7 @@
             @csrf
 
             @foreach ($scenario->steps()->orderBy('order')->get() as $index => $step)
-                <section class="slide hidden data-[active=true]:flex flex-col items-center gap-6" 
+                <section class="slide hidden data-[active=true]:flex flex-col items-center gap-6 bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700 rounded-lg p-8 h-[calc(100vh-120px)] overflow-y-auto mb-16" 
                          data-slide="{{ $step->id }}" 
                          @if ($step->fork_to_step) 
                              data-condition="{{ $step->{'multiple_choice_option_' . $step->fork_condition} }}" 
@@ -35,16 +35,21 @@
                         @include('partials.show-attachment')
                         <p class="text-lg text-muted-foreground max-w-2xl">{{ $step->description }}</p>    
 
+                    
+                        @if($scenario->ask_for_name)
                         <div class="w-full max-w-2xl space-y-4">
                             <label for="name" class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                                 Hoe heet je?
                             </label>
+          
                             <input type="text" 
-                                   id="name"
+                                   id="name" 
                                    name="name" 
-                                   class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                                   placeholder="Je naam">
+                                   class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2" 
+                                   placeholder="Je naam"
+                                   required>
                         </div>
+                        @endif
 
                     @elseif ($step->question_type == 'open_question')
                         @include('partials.show-attachment')
@@ -132,15 +137,17 @@
                 @endif
             @endforeach
 
-            <div class="flex justify-between mt-8">
-                <button id="prev" 
-                        class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2">
-                    Vorige stap
-                </button>
-                <button id="next"
-                        class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2">
-                    Volgende stap
-                </button>
+            <div class="fixed bottom-0 left-0 right-0 bg-gray-50 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 shadow-lg p-4">
+                <div class="max-w-4xl mx-auto flex justify-between items-center">
+                    <button id="prev" 
+                            class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2">
+                        Vorige stap
+                    </button>
+                    <button id="next" 
+                            class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2">
+                        Volgende stap
+                    </button>
+                </div>
             </div>
         </form>
     @endif
