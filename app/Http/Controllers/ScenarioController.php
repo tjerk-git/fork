@@ -33,14 +33,17 @@ class ScenarioController extends Controller
     {
         $validatedData = $request->validate([
             'name' => 'required|max:255',
-            'is_public' => 'boolean',
+            'is_public' => 'nullable|boolean',
             'access_code' => 'nullable|string|min:6|max:20',
-            'ask_for_name' => 'boolean',
+            'ask_for_name' => 'nullable|boolean',
         ]);
 
 
         $validatedData['user_id'] = auth()->id();
    
+        $validatedData['is_public'] = (bool) ($request->is_public ?? false);
+        $validatedData['ask_for_name'] = (bool) ($request->ask_for_name ?? false);
+
         $scenario = Scenario::create($validatedData);
 
         // create a first step for this scenario
@@ -78,20 +81,19 @@ class ScenarioController extends Controller
     
     public function update(Request $request, Scenario $scenario)
     {
+        $validatedData = $request->validate([
+            'name' => 'required|max:255',
+            'description' => 'nullable|string',
+            'is_public' => 'nullable|boolean',
+            'ask_for_name' => 'nullable|boolean',
+            'access_code' => 'nullable|string|min:4|max:20',
+        ]);
 
-        // $validatedData = $request->validate([
-        //     'name' => 'required|max:255',
-        //     'is_public' => 'boolean',
-        //     'access_code' => 'nullable|string|min:4|max:20',
-        // ]);
+        $validatedData['is_public'] = (bool) ($request->is_public ?? false);
+        $validatedData['ask_for_name'] = (bool) ($request->ask_for_name ?? false);
 
-        // if there is no ask_for_name field, set it to false
-        if (!isset($request->ask_for_name)) {
-            $request->merge(['ask_for_name' => false]);
-        }
 
-    
-        $scenario->update($request->all());
+        $scenario->update($validatedData);
 
         return redirect()->route('scenarios.show', $scenario)->with('success', 'Scenario updated successfully');
     }
@@ -136,5 +138,15 @@ class ScenarioController extends Controller
         session()->put('access_code_' . $scenario->id, true);
 
         return view('scenarios.publicShow', compact('scenario'));
+    }
+
+    public function toggleVisibility(Scenario $scenario)
+    {
+        $scenario->update([
+            'is_public' => !$scenario->is_public
+        ]);
+
+        $status = $scenario->is_public ? 'publiek' : 'privé';
+        return redirect()->back()->with('success', "Scenario is nu {$status}");
     }
 }

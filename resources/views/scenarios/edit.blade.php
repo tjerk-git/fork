@@ -48,8 +48,8 @@
                             <input type="checkbox" 
                                    id="ask_for_name" 
                                    name="ask_for_name" 
+                                   value="1"
                                    class="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
-
                                    {{ old('ask_for_name', $scenario->ask_for_name) ? 'checked' : '' }}>
                             <label for="ask_for_name" class="text-sm font-medium text-gray-900 dark:text-gray-100">
                                 Vraag om naam
@@ -85,17 +85,18 @@
                     </div>
 
                     <div class="space-y-2">
-                        <label class="relative inline-flex items-center cursor-pointer">
+                        <div class="flex items-center">
                             <input type="checkbox" 
                                    name="is_public" 
-                                   class="sr-only peer" 
+                                   id="is_public"
+                                   value="1"
+                                   class="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" 
                                    {{ old('is_public', $scenario->is_public) ? 'checked' : '' }}>
-                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 dark:peer-focus:ring-primary-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary-600"></div>
-                            <span class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-100">Publiek beschikbaar</span>
-                        </label>
-                        @error('is_public')
-                            <p class="text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
-                        @enderror
+                            <label for="is_public" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">
+                                Publiek beschikbaar
+                            </label>
+                        </div>
+                
                     </div>
                 </div>
 
@@ -105,7 +106,7 @@
                         Annuleren
                     </a>
                     <button type="submit" 
-                            class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2">
+                            class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2">
                         Opslaan
                     </button>
                 </div>

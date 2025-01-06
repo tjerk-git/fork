@@ -65,10 +65,9 @@
                 </div>
 
                 <div class="flex flex-wrap items-center gap-2">
-                    <form action="{{ route('scenarios.update', $scenario) }}" method="POST" class="inline">
+                    <form action="{{ route('scenarios.toggle-visibility', $scenario) }}" method="POST" class="inline">
                         @csrf
                         @method('PUT')
-                        <input type="hidden" name="is_public" value="{{ $scenario->is_public ? '0' : '1' }}">
                         <button type="submit" 
                                 class="inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium {{ $scenario->is_public 
                                     ? 'bg-secondary text-secondary-foreground hover:bg-secondary/80' 

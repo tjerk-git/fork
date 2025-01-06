@@ -22,6 +22,8 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/scenarios/{scenario}/edit', [ScenarioController::class, 'update'])->name('scenarios.update');
     Route::post('/scenario/{scenario}/update-step-order', [ScenarioController::class, 'updateStepOrder'])
         ->name('scenario.update-step-order');
+    Route::put('/scenarios/{scenario}/toggle-visibility', [ScenarioController::class, 'toggleVisibility'])
+        ->name('scenarios.toggle-visibility');
 
     // Steps
     Route::get('/scenarios/{scenario}/steps/create', [StepController::class, 'create'])->name('steps.create');

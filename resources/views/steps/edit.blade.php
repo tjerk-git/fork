@@ -2,13 +2,20 @@
 
 @section('content')
 <div class="container mx-auto px-4 py-8 max-w-4xl">
-    <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">
-        @if ($step->question_type === 'intro')
-            Introductie voor {{ $scenario->name }}
-        @else
-            Een vraag voor {{ $scenario->name }}
-        @endif
-    </h1>
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">
+            @if ($step->question_type === 'intro')
+                Introductie voor {{ $scenario->name }}
+            @else
+                Een vraag voor {{ $scenario->name }}
+            @endif
+        </h1>
+        <a href="{{ route('scenarios.show', $scenario) }}" 
+           class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500">
+            <i class="fas fa-arrow-left mr-2"></i>
+            Terug naar overzicht
+        </a>
+    </div>
 
     @if(session('success'))
         <div class="bg-green-50 dark:bg-green-900 border border-green-200 dark:border-green-800 rounded-lg p-4 mb-6">
