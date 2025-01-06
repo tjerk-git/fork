@@ -93,7 +93,7 @@
         @endif
 
         {{-- Multiple Choice Question --}}
-        @if($step->question_type == 'multiple_choice_question')
+        @if($step->question_type == 'multiple_c' || $step->question_type == 'multiple_choice_question')
             <div class="space-y-6">
                 <div class="space-y-2">
                     <label for="multiple_choice_question" class="block text-sm font-medium text-gray-900 dark:text-gray-100">

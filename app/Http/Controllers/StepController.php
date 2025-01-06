@@ -122,6 +122,7 @@ class StepController extends Controller
             'multiple_choice_option_3' => $request->multiple_choice_option_3,
         ]);
 
+
         // Add keywords if it's an open question
         if ($request->has('keywords') && $request->question_type === 'open_question') {
             foreach ($request->keywords as $word) {

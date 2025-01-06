@@ -124,13 +124,14 @@
                                         </td>
                                         <td class="p-4 align-middle">
                                             <div class="space-y-1">
+                                       
                                                 @if ($step->question_type == 'intro')
                                                     <div class="font-medium">Introductie</div>
                                                     <p class="text-sm text-muted-foreground">{{ $step->description }}</p>
                                                 @elseif ($step->question_type == 'open_question')
                                                     <div class="font-medium">Open vraag</div>
                                                     <p class="text-sm text-muted-foreground">{{ $step->open_question }}</p>
-                                                @elseif ($step->question_type == 'multiple_choice_question')
+                                                @elseif ($step->question_type == 'multiple_c' || $step->question_type == 'multiple_choice_question')
                                                     <div class="font-medium">Meerkeuze vraag</div>
                                                     <p class="text-sm text-muted-foreground">{{ $step->multiple_choice_question }}</p>
                                                 @elseif ($step->question_type == 'tussenstap')
