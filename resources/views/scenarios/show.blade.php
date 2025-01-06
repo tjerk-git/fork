@@ -218,6 +218,8 @@
                 </select>
             </div>
 
+            @include('partials.add-attachment')
+            
             {{-- Open Question --}}
             <div class="space-y-2" id="open_question" style="display:none;">
                 <label for="open_question" class="text-sm font-medium">

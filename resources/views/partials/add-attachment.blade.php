@@ -11,7 +11,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
                     </svg>
                     <p class="mb-2 text-sm text-gray-600 dark:text-gray-400">
-                        <span class="font-semibold">Klik om te uploaden</span> of sleep een bestand
+                        <span class="font-semibold">Klik om te uploaden</span>
                     </p>
                     <p class="text-xs text-gray-500 dark:text-gray-400">
                         Video (MP4) of afbeelding
@@ -21,11 +21,47 @@
                        id="attachment"
                        name="attachment"
                        accept="image/*,video/mp4"
-                       class="hidden">
+                       class="hidden"
+                       onchange="handleFileSelect(event)">
             </label>
+        </div>
+        <div id="preview-container" class="hidden mt-4">
+            <img id="image-preview" class="hidden max-h-48 rounded-lg mx-auto" alt="Preview">
+            <video id="video-preview" class="hidden max-h-48 rounded-lg mx-auto" controls>
+                Your browser does not support the video tag.
+            </video>
         </div>
         @error('attachment')
             <p class="text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
         @enderror
     </div>
 </div>
+
+<script>
+function handleFileSelect(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const previewContainer = document.getElementById('preview-container');
+    const imagePreview = document.getElementById('image-preview');
+    const videoPreview = document.getElementById('video-preview');
+
+    // Reset previews
+    imagePreview.classList.add('hidden');
+    videoPreview.classList.add('hidden');
+    previewContainer.classList.remove('hidden');
+
+    if (file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            imagePreview.src = e.target.result;
+            imagePreview.classList.remove('hidden');
+        };
+        reader.readAsDataURL(file);
+    } else if (file.type === 'video/mp4') {
+        const url = URL.createObjectURL(file);
+        videoPreview.src = url;
+        videoPreview.classList.remove('hidden');
+    }
+}
+</script>

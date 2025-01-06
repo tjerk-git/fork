@@ -95,7 +95,7 @@ class StepController extends Controller
         if($request->file('attachment')){
             $file = $request->file('attachment');
             $filename = date('YmdHi').$file->getClientOriginalName();
-            $file->move(public_path('attachments'), $filename);
+            $file->move(public_path('public/images'), $filename);
             $validatedData['attachment'] = $filename;
         }else{
             $validatedData['attachment'] = null;
