@@ -21,7 +21,7 @@
             @csrf
 
             @foreach ($scenario->steps()->orderBy('order')->get() as $index => $step)
-                <section class="slide hidden data-[active=true]:flex flex-col items-center gap-6 bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700 rounded-lg p-8 h-[calc(100vh-120px)] overflow-y-auto mb-16" 
+                <section class="slide flex-col items-center gap-6 bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700 rounded-lg p-8 h-[calc(100vh-120px)] overflow-y-auto mb-16" 
                          data-slide="{{ $step->id }}" 
                          @if ($step->fork_to_step) 
                              data-condition="{{ $step->{'multiple_choice_option_' . $step->fork_condition} }}" 

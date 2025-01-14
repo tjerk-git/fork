@@ -16,7 +16,7 @@
                 </video>
             @else
                 <img src="{{ url('public/images/'.$step->attachment) }}" 
-                     class="w-full h-[300px] rounded-lg object-cover"
+                 
                      alt="{{ $step->description ?? '' }}">
             @endif
         </div>

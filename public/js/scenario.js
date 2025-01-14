@@ -101,6 +101,8 @@ function init() {
     let steps = Array.from(stepDivs).map(div => parseInt(div.dataset.slide));
     let index = 0;
 
+    console.log(steps);
+
     // Hide all steps except first
     stepDivs.forEach((stepDiv, i) => {
         if (i !== 0) stepDiv.style.display = "none";
@@ -110,31 +112,51 @@ function init() {
     next.addEventListener('click', (event) => {
         event.preventDefault();
 
-        const currentStep = document.querySelector(`[data-slide="${steps[index]}"]`);
-        const radioInputs = currentStep.querySelectorAll('input[type="radio"]');
-
-        const condition = currentStep.dataset.condition;
-        const forkStep = parseInt(currentStep.dataset.forkStep);
-        
-        if (radioInputs.length > 0 && forkStep && condition) {
-            const selectedOption = Array.from(radioInputs).find(input => input.checked);
-            if (!selectedOption) {
-                alert('Selecteer een antwoord voordat je verder gaat.');
-                return;
-            }
-
-            if (selectedOption.value === condition) {
-                removeNumbers([forkStep]);
-            } else {
-                addNumbers([forkStep]);
-            }
-        }
 
         if (index < steps.length - 1) {
             index++;
             stepDivs.forEach(stepDiv => {
                 stepDiv.style.display = "none";
             });
+
+
+            let currentStep = document.querySelector(`[data-slide="${steps[index]}"]`);
+            const radioInputs = currentStep.querySelectorAll('input[type="radio"]');
+    
+            let condition = currentStep.dataset.condition;
+            let forkStep = parseInt(currentStep.dataset.forkStep);
+    
+            console.log(steps[index]);
+    
+            console.log(`condition: ${condition}`);
+            console.log(`forkStep: ${forkStep}`);
+            console.log(`radio: ${radioInputs.length}`);
+    
+            if (radioInputs.length > 0 && forkStep && condition) {
+                radioInputs.forEach(input => {
+                    input.addEventListener('change', function() {
+                        console.log(`Selected value: ${this.value}`);
+                        console.log(`condition: ${condition}`);
+                        
+                        //console.log(this.value.toLowerCase(), condition.toLowerCase());
+
+                        if (this.value.toLowerCase() == condition.toLowerCase()) {
+                            // and the number is not in the array
+                            if (!steps.includes(forkStep)) {
+                                console.log('adding number', forkStep);
+                                addNumbers([forkStep]);
+                            }
+                        } else {
+                            console.log('removing number', forkStep);
+                            removeNumbers([forkStep]);
+                        }
+                    });
+                });
+            }
+
+
+
+
             document.querySelector(`[data-slide="${steps[index]}"]`).style.display = "block";
 
             if (index === steps.length - 1) {
