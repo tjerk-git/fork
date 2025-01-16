@@ -154,7 +154,11 @@ function init() {
                 });
             }
 
-
+            // find the button with id endbutton, listen for click and on click submit the form
+            const endButton = document.getElementById('endbutton');
+            endButton.addEventListener('click', () => {
+                scenarioForm.submit();
+            });
 
 
             document.querySelector(`[data-slide="${steps[index]}"]`).style.display = "block";
