@@ -1,0 +1,15 @@
+.masega-section-home {
+
+  display: none;
+
+  .masega-content-container {
+    width: 50%;
+    padding-bottom: 2vw;
+  }
+
+  &__main-image {
+    display: block;
+    width: 100%;
+    margin: 0 auto 2vw auto;
+  }
+}

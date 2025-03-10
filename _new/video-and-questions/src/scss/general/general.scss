@@ -1,0 +1,117 @@
+* {
+  -webkit-font-smoothing: antialiased; /* This needs to be set or some font faced fonts look bold on Mac in Chrome/Webkit based browsers. */
+  -moz-osx-font-smoothing: grayscale; /* Fixes font bold issue in Firefox version 25+ on Mac */
+}
+
+html, body {
+  background-color: $zestorOrange;
+  color: white;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 300;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Abril Fatface', serif;
+  font-weight: 400;
+  margin-top: 0;
+}
+
+h2 {
+  font-size: 2.9vw;
+  letter-spacing: 0.3vw;
+  margin-bottom: 2vw;
+
+  span {
+    text-decoration: underline;
+  }
+}
+
+p {
+  font-size: 1.2vw;
+  line-height: 1.5;
+  margin-bottom: 0.7vw;
+
+  &:last-of-type {
+    margin-bottom: 1vw;
+  }
+}
+
+.masega-vertical-align {
+  -ms-box-orient: horizontal;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -moz-flex;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-align-items: center;
+  align-items: center;
+  height: 100%;
+  position: relative;
+}
+
+.masega-general-container {
+  position: relative;
+  width: 100%;
+
+  @media (max-width: $mobileMaxWidth){
+
+  }
+}
+
+.masega-site-base {
+  position: relative;
+}
+
+.masega-section {
+  position: relative;
+  width: 100%;
+  display: none;
+}
+
+.masega-content-container {
+  position: relative;
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: 0px 7px 15px 1px rgb(0 0 0 / 45%);
+  background-color: white;
+  color: black;
+
+  &--with-padding {
+    width: calc(80% - 6vw);
+    padding: 3vw;
+  }
+}
+
+.masega-fullheight {
+  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
+}
+
+
+.masega-button {
+  border: 2px solid $nhlstendenBLUE;
+  line-height: 3.8vw;
+  padding: 0 3vw;
+  border-radius: 9999px;
+  color: $nhlstendenBLUE;
+  font-family: 'Roboto', sans-serif;
+  font-style: italic;
+  font-size: 2vw;
+  display: table;
+  text-decoration: none;
+  cursor: pointer;
+  margin: 0 auto;
+  position: relative;
+
+  &:not(.masega-button--inactive):hover {
+    background-color: $nhlstendenBLUE;
+    color: white;
+  }
+
+  &--inactive {
+    opacity: 0.3;
+    cursor: auto;
+  }
+}

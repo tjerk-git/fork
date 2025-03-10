@@ -1,0 +1,107 @@
+{
+  "personname": "Angela",
+
+  "personanswers": {
+    "visual": [
+      "Irritation",
+      "Embarrassment",
+      "Disappointment",
+      "Pleasure"
+    ],
+    "data": [
+      {
+        "power": 98,
+        "valance": 90
+      },
+      {
+        "power": 90,
+        "valance": 75
+      },
+      {
+        "power": 80,
+        "valance": 85
+      },
+      {
+        "power": 5,
+        "valance": 5
+      }
+    ]
+  },
+
+  "instructions": {
+    "title": "INSTRUCTIONS",
+    "bodycopy": [
+      "The aim of this simulation game is to develop your intercultural competence. In this game, you will be shown a series of videos of foreign students in the Netherlands or elsewhere, who will tell you about their encounters with the Dutch or other locals. After each video, you will be asked to indicate how you would feel, and what you would do, in this situation. Subsequently, you will be shown what the foreign student felt and did in this situation. Thus, you can compare your own perceptions and behaviour to those of other individuals. Finally, you will be asked to indicate to what extend to think these differences are the result of differences in cultural background.","Note that there are no right or wrong answers in this game.", "The aim of this game is to improve your insights in individuals’ perceptions of social situations, and to reflect upon the role that cultural differences may play in these situations."
+    ]
+  },
+
+  "incidenttitle": "Incident #2",
+
+  "intro": {
+    "title": "ANGELA",
+    "bodycopy": [
+      "Angela, a student from Mexico went to have her bike tire fixed at a bike shop." , "In this clip she explains the situation."
+    ]
+  },
+
+  "video": {
+    "title": "THE INCIDENT",
+    "video": "clip-1"
+  },
+
+  "answer1": {
+    "title": "INDICATE HOW <span>YOU</span> WOULD <span>FEEL</span> IN THIS SITUATION",
+
+    "bodycopy": [
+      "If you were in Angela’s position, how would you feel, in this situation? Please indicate to what extent, you think, you would experience each of the following emotions: move the emotions."
+
+    ]
+  },
+
+  "feedbackvideo1": {
+    "title": "THIS IS HOW ANGELA FELT IN THIS SITUATION",
+
+    "video": "clip-2"
+  },
+
+  "answerreview1": {
+    "title": "NOW, COMPARE YOUR FEELINGS",
+
+    "bodycopy": [
+      "To the right, you see how Angela indicated she felt, and how you indicated that you would feel in this situation.", "Reflect on any differences between the positions of the feelings"
+    ]
+  },
+
+  "answer2": {
+    "title": "NEXT, INDICATE WHAT <span>YOU</span> WOULD <span>DO</span> IN THIS SITUATION",
+
+    "bodycopy": [
+      "To the right, you see how Angela indicated how she responded, and how you indicated how you would respond in this situation.", "Again reflect on any differences between the positions of the behaviour"
+
+    ]
+  },
+
+  "feedbackvideo2": {
+    "title": "THIS IS WHAT ANGELA DID IN THIS SITUATION",
+
+    "video": "clip-3"
+  },
+
+  "answerreview2": {
+    "title": "NOW COMPARE YOUR BEHAVIOUR",
+    "bodycopy": [
+      "To the right, you see how Angela indicated that she responded, and how you indicated that you would respond in this situation."
+
+    ]
+  },
+
+  "finalreview": {
+    "title": "FINALLY, SPOT THE CULTURAL DIFFERENCES",
+
+    "bodycopy": [
+      "To the right you see the differences in feelings and behaviour between you and Angela, displayed in one figure.",
+      "Finally, indicate to what extend you think these differences between you and Angela reflect differences in cultural background (rather than, for example, differences in personality)."
+
+    ]
+  }
+}
