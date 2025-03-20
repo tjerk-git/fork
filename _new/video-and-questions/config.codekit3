@@ -7,7 +7,7 @@
       "uuidString" : "C12A9CFB-6116-47C4-B66D-C3088F502794"
     }
   ],
-  "creatorBuild" : "34680",
+  "creatorBuild" : "34689",
   "files" : {
     "\/.idea" : {
       "ft" : 65536,
@@ -305,28 +305,28 @@
       "oS" : 3,
       "pg" : 0
     },
-    "\/video\/clip-1.mp4" : {
+    "\/video\/dsjfho.mp4" : {
       "cB" : 0,
       "ft" : 8192,
       "hM" : 0,
       "oA" : 0,
-      "oAP" : "\/video\/clip-1.mp4",
+      "oAP" : "\/video\/dsjfho.mp4",
       "oF" : 0
     },
-    "\/video\/clip-2.mp4" : {
+    "\/video\/sd8ds8dsdjsjds.mp4" : {
       "cB" : 0,
       "ft" : 8192,
       "hM" : 0,
       "oA" : 0,
-      "oAP" : "\/video\/clip-2.mp4",
+      "oAP" : "\/video\/sd8ds8dsdjsjds.mp4",
       "oF" : 0
     },
-    "\/video\/clip-3.mp4" : {
+    "\/video\/sdjhdufduisfdiu.mp4" : {
       "cB" : 0,
       "ft" : 8192,
       "hM" : 0,
       "oA" : 0,
-      "oAP" : "\/video\/clip-3.mp4",
+      "oAP" : "\/video\/sdjhdufduisfdiu.mp4",
       "oF" : 0
     }
   },
@@ -639,8 +639,6 @@
     "buildFolderActive" : 0,
     "buildFolderName" : "build",
     "cleanBuild" : 1,
-    "cssoForceMediaMerge" : 0,
-    "cssoRestructure" : 1,
     "environmentVariableEntries" : [
       "NODE_ENV:::production"
     ],

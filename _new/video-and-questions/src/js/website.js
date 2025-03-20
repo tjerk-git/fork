@@ -24,7 +24,6 @@ var SiteManager = {
         QuestionsManager.init();
         DragAnswerManager.init();
 
-        $('.masega-section-home').fadeIn();
         $.getJSON("data/data.json", this.onDataLoaded.bind(this));
         this.myHomeStartButton.on("click", this.onHomeStartClicked.bind(this));
         this.myInstructionsStartButton.on("click", this.onInstructionsStartClicked.bind(this));
@@ -40,6 +39,8 @@ var SiteManager = {
     },
 
     onDataLoaded: function (data) {
+        $('.js-main-image').attr('src', data.startimage);
+        //
         $('.js-personname').html(data.personname);
         //
         $('.masega-section-instructions h2').html(data.instructions.title);
@@ -71,11 +72,11 @@ var SiteManager = {
         $('#question9 h2').html(data.finalreview.title);
         $('#question9 .masega-p-container').html(this.getBodyHtml(data.finalreview.bodycopy));
 
-        QuestionsManager.aGunterAnswers["gunter-1"] = [];
-        QuestionsManager.aGunterAnswers["gunter-2"] = [];
+        QuestionsManager.aPersonAnswers["person-answer-1"] = [];
+        QuestionsManager.aPersonAnswers["person-answer-2"] = [];
         for(var i=0;i<4;i++){
-            QuestionsManager.aGunterAnswers["gunter-1"].push(100 - data.personanswers.data[i].power);
-            QuestionsManager.aGunterAnswers["gunter-2"].push(data.personanswers.data[i].valance);
+            QuestionsManager.aPersonAnswers["person-answer-1"].push(100 - data.personanswers.data[i].power);
+            QuestionsManager.aPersonAnswers["person-answer-2"].push(data.personanswers.data[i].valance);
             //
             $('.js-answer-word-'+(i+1)).html(data.personanswers.visual[i]);
         }
@@ -84,18 +85,23 @@ var SiteManager = {
 
         LocalVideoManager.init([
             {
-                divID:'gunter-1',
-                videoID:data.video.video
+                divID:'video-1',
+                videoID:'clip-1',
+                videopath:data.video.videopath
             },
             {
-                divID:'gunter-2',
-                videoID:data.feedbackvideo1.video
+                divID:'video-2',
+                videoID:'clip-2',
+                videopath:data.feedbackvideo1.videopath
             },
             {
-                divID:'gunter-3',
-                videoID:data.feedbackvideo2.video
+                divID:'video-3',
+                videoID:'clip-3',
+                videopath:data.feedbackvideo2.videopath
             }
         ]);
+
+        $('.masega-section-home').fadeIn();
     },
 
     getBodyHtml: function (_ar) {
@@ -140,16 +146,16 @@ var QuestionsManager = {
 
     myQuestions: $('.masega-question'),
     myNextButtons: $('.masega-question .js-btn-next'),
-    bVideoGunter1IsFinished:false,
-    bVideoGunter2IsFinished:false,
-    bVideoGunter3IsFinished:false,
+    bVideoPerson1IsFinished:false,
+    bVideoPerson2IsFinished:false,
+    bVideoPerson3IsFinished:false,
     myFinalScreenTheirsToggle:null,
     myFinalScreenYoursToggle:null,
     myFinalScreenLines:null,
 
-    aGunterAnswers:{
-        "gunter-1":[],
-        "gunter-2":[]
+    aPersonAnswers:{
+        "person-answer-1":[],
+        "person-answer-2":[]
     },
 
     init: function () {
@@ -174,26 +180,24 @@ var QuestionsManager = {
                 this.changeQuestionStatus(_questionID, true);
                 break;
             case 2:
-                this.changeQuestionStatus(_questionID, this.bVideoGunter1IsFinished);
+                this.changeQuestionStatus(_questionID, this.bVideoPerson1IsFinished);
                 break;
             case 3:
-                this.changeQuestionStatus(_questionID, DragAnswerManager.checkIfAllPlaced('gunter-1'));
+                this.changeQuestionStatus(_questionID, DragAnswerManager.checkIfAllPlaced('person-answer-1'));
                 break;
             case 4:
-                this.changeQuestionStatus(_questionID, this.bVideoGunter2IsFinished);
+                this.changeQuestionStatus(_questionID, this.bVideoPerson2IsFinished);
                 break;
             case 5:
-                //gunter 1 review
                 this.changeQuestionStatus(_questionID, true);
                 break;
             case 6:
-                this.changeQuestionStatus(_questionID, DragAnswerManager.checkIfAllPlaced('gunter-2'));
+                this.changeQuestionStatus(_questionID, DragAnswerManager.checkIfAllPlaced('person-answer-2'));
                 break;
             case 7:
-                this.changeQuestionStatus(_questionID, this.bVideoGunter3IsFinished);
+                this.changeQuestionStatus(_questionID, this.bVideoPerson3IsFinished);
                 break;
             case 8:
-                //gunter 2 review
                 this.changeQuestionStatus(_questionID, true);
                 break;
         }
@@ -233,29 +237,29 @@ var QuestionsManager = {
         //}
 
         if(questionID + 1 == 2){
-            LocalVideoManager.playVideo('gunter-1');
+            LocalVideoManager.playVideo('video-1');
         }
 
         if(questionID + 1 == 4){
             this.lockSectionAnswers('question3');
-            LocalVideoManager.playVideo('gunter-2');
+            LocalVideoManager.playVideo('video-2');
         }
 
         if(questionID + 1 == 5){
-            this.setupAnswerReview('gunter-1');
+            this.setupAnswerReview('person-answer-1');
         }
 
         if(questionID + 1 == 7){
             this.lockSectionAnswers('question6');
-            LocalVideoManager.playVideo('gunter-3');
+            LocalVideoManager.playVideo('video-3');
         }
 
         if(questionID + 1 == 8){
-            this.setupAnswerReview('gunter-2');
+            this.setupAnswerReview('person-answer-2');
         }
 
         if(questionID + 1 == 9){
-            this.setupAnswerReview('gunter-end');
+            this.setupAnswerReview('person-answer-end');
         }
 
     },
@@ -265,8 +269,8 @@ var QuestionsManager = {
         this.myFinalScreenYoursToggle.removeClass('masega-drag-answer--clickable');
         this.myFinalScreenTheirsToggle.addClass('masega-drag-answer--inactive');
         this.myFinalScreenTheirsToggle.addClass('masega-drag-answer--clickable');
-        $('#gunter-end-review .masega-drag-answer__yours').removeClass('masega-drag-answer--inactive');
-        $('#gunter-end-review .masega-drag-answer__theirs').addClass('masega-drag-answer--inactive');
+        $('#person-answer-end-review .masega-drag-answer__yours').removeClass('masega-drag-answer--inactive');
+        $('#person-answer-end-review .masega-drag-answer__theirs').addClass('masega-drag-answer--inactive');
     },
 
     onShowTheirsOnFinalScreenClicked: function () {
@@ -274,8 +278,8 @@ var QuestionsManager = {
         this.myFinalScreenYoursToggle.addClass('masega-drag-answer--clickable');
         this.myFinalScreenTheirsToggle.removeClass('masega-drag-answer--inactive');
         this.myFinalScreenTheirsToggle.removeClass('masega-drag-answer--clickable');
-        $('#gunter-end-review .masega-drag-answer__theirs').removeClass('masega-drag-answer--inactive');
-        $('#gunter-end-review .masega-drag-answer__yours').addClass('masega-drag-answer--inactive');
+        $('#person-answer-end-review .masega-drag-answer__theirs').removeClass('masega-drag-answer--inactive');
+        $('#person-answer-end-review .masega-drag-answer__yours').addClass('masega-drag-answer--inactive');
     },
 
     setupAnswerReview: function (_answerID) {
@@ -283,9 +287,9 @@ var QuestionsManager = {
         var yours = $('#'+_answerID+'-review .masega-drag-answer__yours');
         var theirs = $('#'+_answerID+'-review .masega-drag-answer__theirs');
 
-        if(_answerID == "gunter-end"){
-            var answ1 = DragAnswerManager.getAnswerPositions('gunter-1');
-            var answ2 = DragAnswerManager.getAnswerPositions('gunter-2');
+        if(_answerID == "person-answer-end"){
+            var answ1 = DragAnswerManager.getAnswerPositions('person-answer-1');
+            var answ2 = DragAnswerManager.getAnswerPositions('person-answer-2');
 
             //HACK just for the loop
             answ = answ1;
@@ -300,27 +304,27 @@ var QuestionsManager = {
             var theirLeft, theirTop;
 
             switch(_answerID){
-                case "gunter-1":
+                case "person-answer-1":
                     yourLeft = "6%";
                     yourTop = this.adjustPos(_answerID, false, yourTop);
                     //
                     theirLeft = "50%";
-                    theirTop = this.adjustPos(_answerID, false, this.aGunterAnswers[_answerID][i]);
+                    theirTop = this.adjustPos(_answerID, false, this.aPersonAnswers[_answerID][i]);
                     break;
 
-                case "gunter-2":
+                case "person-answer-2":
                     yourTop = (3 + (i*20))+"%";
                     yourLeft = this.adjustPos(_answerID, true, yourLeft);
                     //
                     theirTop = (13 + (i*20))+"%";
-                    theirLeft = this.adjustPos(_answerID, true, this.aGunterAnswers[_answerID][i]);
+                    theirLeft = this.adjustPos(_answerID, true, this.aPersonAnswers[_answerID][i]);
                     break;
 
-                case "gunter-end":
+                case "person-answer-end":
                     yourTop = this.adjustPos(_answerID, false, answ1[i].y*100);
                     yourLeft = this.adjustPos(_answerID, true, answ2[i].x*100);
-                    theirTop = this.adjustPos(_answerID, false, this.aGunterAnswers["gunter-1"][i]);
-                    theirLeft = this.adjustPos(_answerID, true, this.aGunterAnswers["gunter-2"][i]);
+                    theirTop = this.adjustPos(_answerID, false, this.aPersonAnswers["person-answer-1"][i]);
+                    theirLeft = this.adjustPos(_answerID, true, this.aPersonAnswers["person-answer-2"][i]);
                     //
                     break;
             }
@@ -336,7 +340,7 @@ var QuestionsManager = {
             });
         }
 
-        if(_answerID == "gunter-end"){
+        if(_answerID == "person-answer-end"){
             window.setTimeout(this.handleLines.bind(this), 100);
         }
     },
@@ -362,11 +366,11 @@ var QuestionsManager = {
     },
 
     handleLines: function () {
-        var yours = $('#gunter-end-review .masega-drag-answer__yours');
-        var theirs = $('#gunter-end-review .masega-drag-answer__theirs');
-        var offset = $('#gunter-end-review .masega-general-container').offset();
+        var yours = $('#person-answer-end-review .masega-drag-answer__yours');
+        var theirs = $('#person-answer-end-review .masega-drag-answer__theirs');
+        var offset = $('#person-answer-end-review .masega-general-container').offset();
         for(var i=0;i<yours.length;i++) {
-            this.adjustLine($(yours[i]), $(theirs[i]), $($('#gunter-end-review .masega-drag-answer__connecting-line')[i]), offset);
+            this.adjustLine($(yours[i]), $(theirs[i]), $($('#person-answer-end-review .masega-drag-answer__connecting-line')[i]), offset);
         }
     },
 
@@ -394,18 +398,18 @@ var QuestionsManager = {
 
     onVideoFinished: function (_playerID){
         switch(_playerID){
-            case "gunter-1":
-                this.bVideoGunter1IsFinished = true;
+            case "video-1":
+                this.bVideoPerson1IsFinished = true;
                 this.checkAnswer(2);
                 break;
 
-            case "gunter-2":
-                this.bVideoGunter2IsFinished = true;
+            case "video-2":
+                this.bVideoPerson2IsFinished = true;
                 this.checkAnswer(4);
                 break;
 
-            case "gunter-3":
-                this.bVideoGunter3IsFinished = true;
+            case "video-3":
+                this.bVideoPerson3IsFinished = true;
                 this.checkAnswer(7);
                 break;
         }
@@ -482,7 +486,7 @@ var LocalVideoManager = {
         this.myPlayers = {};
         for(var i=0;i<_playerIDs.length;i++) {
 
-            $('#'+_playerIDs[i].divID).html('<video src="video/'+_playerIDs[i].videoID+'.mp4" playsinline controls></video>')
+            $('#'+_playerIDs[i].divID).html('<video src="'+_playerIDs[i].videopath+'" playsinline controls></video>')
 
 
             this.myPlayers[_playerIDs[i].divID] = $('#'+_playerIDs[i].divID+' video');
@@ -532,15 +536,15 @@ var YouTubeManager = {
         this.bAPIReady = true;
         this.setupPlayers([
             {
-                divID:'gunter-1',
+                divID:'video-1',
                 videoID:'5_sfnQDr1-o'
             },
             {
-                divID:'gunter-2',
+                divID:'video-2',
                 videoID:'t6wCykq_bLo'
             },
             {
-                divID:'gunter-3',
+                divID:'video-3',
                 videoID:'Q9MFDKka0Bw'
             }
         ]);
@@ -667,10 +671,10 @@ DragableAnswerItem.prototype.handleDrag = function (e) {
         this.bIsDragging = false;
 
         switch(this.myAnswerID){
-            case 'gunter-1':
+            case 'person-answer-1':
                 QuestionsManager.checkAnswer(3);
                 break;
-            case 'gunter-2':
+            case 'person-answer-2':
                 QuestionsManager.checkAnswer(6);
                 break;
         }
