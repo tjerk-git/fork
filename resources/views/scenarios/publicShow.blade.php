@@ -21,6 +21,8 @@
             @csrf
 
             @foreach ($scenario->steps()->orderBy('order')->get() as $index => $step)
+
+
                 <section class="slide flex-col items-center gap-6 bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700 rounded-lg p-8 h-[calc(100vh-120px)] overflow-y-auto mb-16" 
                          data-slide="{{ $step->id }}" 
                          @if ($step->fork_to_step) 
@@ -71,8 +73,10 @@
 
                 
               
-                        
-                    @elseif ($step->question_type == 'multiple_choice_question')
+                
+                    @elseif ($step->question_type == 'multiple_c' || $step->question_type == 'multiple_choice_question')
+
+                    
                         @include('partials.show-attachment')
                         <div class="w-full max-w-2xl space-y-4">
                             <p class="text-lg text-muted-foreground">{{ $step->multiple_choice_question }}</p>

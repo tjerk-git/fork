@@ -155,7 +155,7 @@
                                     Naar vraag: 
                                     @if ($otherStep->question_type == 'open_question')
                                         {{ $otherStep->open_question }}
-                                    @elseif ($otherStep->question_type == 'multiple_choice_question')
+                                    @elseif ($otherStep->question_type == 'multiple_choice_question' || $otherStep->question_type == 'multiple_c')
                                         {{ $otherStep->multiple_choice_question }}
                                     @endif
                                 </option>
