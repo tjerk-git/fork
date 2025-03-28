@@ -20,10 +20,10 @@
     </div>
 
     <div class="grid gap-6 md:grid-cols-2">
-        @foreach ($scenario->steps()->where('question_type', 'multiple_choice_question')->get() as $step)
+        @foreach ($scenario->steps()->where('question_type', 'multiple_c')->get() as $step)
             <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
                 <div class="p-6 space-y-4">
-                    <h3 class="text-lg font-medium">{{ $step->multiple_choice_question }}</h3>
+                    <h3 class="text-lg font-medium">{{ $step->multiple_c }}</h3>
                     <div id="pie-chart-{{ $step->id }}" class="pie-chart"></div>
                 </div>
             </div>
@@ -50,7 +50,7 @@
                                 <td class="p-4 align-middle">
                                     @if ($line->step->question_type === 'open_question')
                                         {{ $line->step->open_question }}
-                                    @elseif ($line->step->question_type === 'multiple_choice_question')
+                                    @elseif ($line->step->question_type === 'multiple_c' || $line->step->question_type === 'multiple_choice_question')
                                         {{ $line->step->multiple_choice_question }}
                                     @else
                                         {{ $line->step->description }}
@@ -69,7 +69,7 @@
 <script src="https://d3js.org/d3.v7.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        @foreach ($scenario->steps()->where('question_type', 'multiple_choice_question')->get() as $step)
+        @foreach ($scenario->steps()->where('question_type', 'multiple_c')->get() as $step)
             // Get all results for this step
             var results = @json($step->resultLines->pluck('value'));
             
