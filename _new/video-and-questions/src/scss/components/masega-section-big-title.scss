@@ -1,0 +1,20 @@
+.masega-section-big-title {
+  display: none;
+
+  h2 {
+    font-size: 9vw;
+    color: #fff;
+    text-align: center;
+    margin-bottom: 3vw;
+  }
+
+  .masega-button {
+    color: white;
+    border-color: white;
+
+    &:not(.masega-button--inactive):hover {
+      background-color: white;
+      color: $zestorOrange;
+    }
+  }
+}
