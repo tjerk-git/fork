@@ -46,7 +46,7 @@ Route::middleware(['guest'])->group(function () {
     // Authentication
     Route::get('login', [AuthController::class, 'showLogin'])->name('login.show');
     Route::post('login', [AuthController::class, 'login'])->name('login');
-    Route::get('verify-token', [AuthController::class, 'showVerifyToken'])->name('verify-token');
+    Route::get('verify-token', [AuthController::class, 'showVerifyToken'])->name('verify-token.show');
     Route::post('verify-token', [AuthController::class, 'verifyToken'])->name('verify-token');
 });
 
