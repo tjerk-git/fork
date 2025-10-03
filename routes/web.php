@@ -19,7 +19,6 @@ Route::middleware(['auth'])->group(function () {
 
     // Scenarios
     Route::resource('scenarios', ScenarioController::class);
-    Route::put('/scenarios/{scenario}/edit', [ScenarioController::class, 'update'])->name('scenarios.update');
     Route::post('/scenario/{scenario}/update-step-order', [ScenarioController::class, 'updateStepOrder'])
         ->name('scenario.update-step-order');
     Route::put('/scenarios/{scenario}/toggle-visibility', [ScenarioController::class, 'toggleVisibility'])
