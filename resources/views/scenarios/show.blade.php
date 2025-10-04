@@ -227,10 +227,9 @@
                 </label>
                 <input type="text" 
                        class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2" 
-                       id="open_question" 
+                       id="open_question"
                        name="open_question"
                        value="{{ old('open_question') }}">
-                @include('partials.keywords-section')
             </div>
 
             {{-- Multiple Choice Question --}}
@@ -393,5 +392,4 @@
     });
 </script>
 
-@include('partials.keywords-scripts')
 @endsection
