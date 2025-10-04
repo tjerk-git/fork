@@ -41,9 +41,4 @@ class Step extends Model
     {
         return $this->hasMany(ResultLine::class);
     }
-
-    public function keywords()
-    {
-        return $this->hasMany(Keyword::class);
-    }
 }

@@ -14,10 +14,9 @@ class Scenario extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'description', 'user_id', 'attachment', 'slug', 'access_code', 'is_public', 'ask_for_name'];
+    protected $fillable = ['name', 'description', 'user_id', 'attachment', 'slug', 'access_code', 'is_public'];
 
     protected $casts = [
-        'ask_for_name' => 'boolean',
         'is_public' => 'boolean',
     ];
 

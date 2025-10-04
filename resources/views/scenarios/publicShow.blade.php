@@ -35,23 +35,7 @@
 
                     @if ($step->question_type == 'intro')
                         @include('partials.show-attachment')
-                        <p class="text-lg text-muted-foreground max-w-2xl">{{ $step->description }}</p>    
-
-                    
-                        @if($scenario->ask_for_name)
-                        <div class="w-full max-w-2xl space-y-4">
-                            <label for="name" class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                                Hoe heet je?
-                            </label>
-          
-                            <input type="text" 
-                                   id="name" 
-                                   name="name" 
-                                   class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2" 
-                                   placeholder="Je naam"
-                                   required>
-                        </div>
-                        @endif
+                        <p class="text-lg text-muted-foreground max-w-2xl">{{ $step->description }}</p>
 
                     @elseif ($step->question_type == 'open_question')
                         @include('partials.show-attachment')
@@ -59,12 +43,11 @@
                             <label for="answer_{{ $step->id }}" class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                                 <p class="text-lg text-muted-foreground">{{ $step->open_question }}</p>
                             </label>
-                            <input type="text" 
+                            <input type="text"
                                    id="answer_{{ $step->id }}"
-                                   name="answer_{{ $step->id }}" 
+                                   name="answer_{{ $step->id }}"
                                    class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                                   placeholder="Antwoord"
-                                   data-keywords="{{ json_encode($step->keywords->pluck('word')) }}">
+                                   placeholder="Antwoord">
                         </div>
 
                     @elseif ($step->question_type == 'tussenstap')

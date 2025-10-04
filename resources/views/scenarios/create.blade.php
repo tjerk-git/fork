@@ -50,22 +50,6 @@
                 @enderror
             </div>
 
-            <div class="space-y-2">
-                <div class="flex items-center space-x-2">
-                    <input type="checkbox" 
-                           id="ask_for_name" 
-                           name="ask_for_name" 
-                           class="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
-                           {{ old('ask_for_name', true) ? 'checked' : '' }}>
-                    <label for="ask_for_name" class="text-sm font-medium text-gray-900 dark:text-gray-100">
-                        Vraag om naam
-                    </label>
-                </div>
-                <p class="text-sm text-muted-foreground">
-                    Wanneer ingeschakeld wordt er aan het begin van het scenario gevraagd om een naam, deze is vervolgens in het scenario te gebruiken met [[naam]]
-                </p>
-            </div>
-
             <div class="space-y-2" id="access_code_group" style="{{ old('is_public') ? 'display:none;' : '' }}">
                 <label for="access_code" class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                     Toegangscode

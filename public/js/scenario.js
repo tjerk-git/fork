@@ -10,30 +10,6 @@ function showConfetti() {
     });
 }
 
-
-
-function replaceName(name){
-
-    //console.log(name);
-
-    // get all p tags
-    // search all p tags for the name
-    document.querySelectorAll('p').forEach(p => {
-        // replace [[name]] with the name
-        p.innerHTML = p.innerHTML.replace(/\[\[naam\]\]/g, name);
-    });
-}
-
-// check if the name input exists
-if (document.getElementById('name')) {
-   // listen for on change on the name input
-    document.getElementById('name').addEventListener('change', function() {
-        console.log(this.value);
-        replaceName(this.value);
-    });
-}
-
-
 function init() {
 
 
@@ -71,27 +47,6 @@ function init() {
     modal.addFooterBtn('Ga verder', 'tingle-btn tingle-btn--primary', function() {
         modal.close();
         showConfetti();
-    });
-
-    // Listen for changes on text inputs with keywords
-    document.querySelectorAll('input[type="text"][data-keywords]').forEach(input => {
-        input.addEventListener('change', (e) => {
-            const keywords = JSON.parse(e.target.dataset.keywords);
-            const enteredText = e.target.value.toLowerCase().trim();
-            
-            if (keywords.some(keyword => enteredText.includes(keyword.toLowerCase()))) {
-                const modalContent = `
-                    <div class="text-center p-6">
-                        <div class="text-5xl mb-6">🎉</div>
-                        <h2 class="text-green-600 text-2xl font-bold mb-4">Goed gedaan!</h2>
-                        <p class="text-lg mb-4">Je hebt het juiste antwoord gegeven!</p>
-                        <img src="${getRandomGif()}" alt="Success!" class="max-w-[300px] mx-auto rounded-lg shadow-md">
-                    </div>
-                `;
-                modal.setContent(modalContent);
-                modal.open();
-            }
-        });
     });
 
     // Navigation logic

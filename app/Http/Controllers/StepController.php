@@ -34,8 +34,6 @@ class StepController extends Controller
     {
         $validatedData = $request->validate([
             'attachment' => 'nullable|file|mimes:jpeg,png,jpg,gif,mp4|max:204800',
-            'keywords' => 'nullable|array',
-            'keywords.*' => 'string|max:255'
         ]);
 
         if($request->file('attachment')){
@@ -43,22 +41,6 @@ class StepController extends Controller
             $filename = date('YmdHi').$file->getClientOriginalName();
             $file->move(public_path('public/images'), $filename);
             $validatedData['attachment'] = $filename;
-        }
-
-
-        // Handle keywords if it's an open question
-        if ($step->question_type === 'open_question') {
-            // Delete existing keywords
-            $step->keywords()->delete();
-            
-            // Add new keywords if provided
-            if ($request->has('keywords')) {
-                foreach ($request->keywords as $word) {
-                    if (!empty(trim($word))) {
-                        $step->keywords()->create(['word' => $word]);
-                    }
-                }
-            }
         }
 
         $validatedData['description'] = $request->description;
@@ -88,8 +70,6 @@ class StepController extends Controller
     {
         $validatedData = $request->validate([
             'attachment' => 'nullable|file|mimes:jpeg,png,jpg,gif,mp4|max:204800',
-            'keywords' => 'nullable|array',
-            'keywords.*' => 'string|max:255'
         ]);
 
         if($request->file('attachment')){
@@ -121,16 +101,6 @@ class StepController extends Controller
             'multiple_choice_option_2' => $request->multiple_choice_option_2,
             'multiple_choice_option_3' => $request->multiple_choice_option_3,
         ]);
-
-
-        // Add keywords if it's an open question
-        if ($request->has('keywords') && $request->question_type === 'open_question') {
-            foreach ($request->keywords as $word) {
-                if (!empty(trim($word))) {
-                    $step->keywords()->create(['word' => $word]);
-                }
-            }
-        }
 
         return redirect()->route('scenarios.show', $request->scenario_id);
     }

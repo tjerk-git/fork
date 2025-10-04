@@ -35,14 +35,12 @@ class ScenarioController extends Controller
             'name' => 'required|max:255',
             'is_public' => 'nullable|boolean',
             'access_code' => 'nullable|string|min:6|max:20',
-            'ask_for_name' => 'nullable|boolean',
         ]);
 
 
         $validatedData['user_id'] = auth()->id();
-   
+
         $validatedData['is_public'] = (bool) ($request->is_public ?? false);
-        $validatedData['ask_for_name'] = (bool) ($request->ask_for_name ?? false);
 
         $scenario = Scenario::create($validatedData);
 
@@ -85,12 +83,10 @@ class ScenarioController extends Controller
             'name' => 'required|max:255',
             'description' => 'nullable|string',
             'is_public' => 'nullable|boolean',
-            'ask_for_name' => 'nullable|boolean',
             'access_code' => 'nullable|string|min:4|max:20',
         ]);
 
         $validatedData['is_public'] = (bool) ($request->is_public ?? false);
-        $validatedData['ask_for_name'] = (bool) ($request->ask_for_name ?? false);
 
 
         $scenario->update($validatedData);
