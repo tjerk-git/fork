@@ -13,10 +13,12 @@ class ScenarioFactory extends Factory
     public function definition()
     {
         return [
+            'name' => $this->faker->sentence(3),
             'description' => $this->faker->paragraph(),
-            'attachment' => $this->faker->imageUrl(),
-            'slug' => $this->faker->slug(),
-            'access_code' => $this->faker->word(),
+            'user_id' => \App\Models\User::factory(),
+            'attachment' => null,
+            'slug' => $this->faker->unique()->slug(),
+            'access_code' => null,
             'is_public' => $this->faker->boolean(),
         ];
     }
