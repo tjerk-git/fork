@@ -50,7 +50,7 @@
         </div>
     @endif
 
-    <form action="{{ route('steps.update', ['step' => $step->id, 'scenario' => $scenario->id]) }}" 
+    <form action="{{ route('steps.update', ['scenario' => $scenario->id, 'step' => $step->id]) }}" 
           method="POST" 
           enctype="multipart/form-data"
           class="space-y-6">
@@ -186,7 +186,7 @@
     </form>
 
     <div class="border-t mt-8 pt-6">
-        <form action="{{ route('steps.destroy', ['step' => $step->id, 'scenario' => $scenario->id]) }}"
+        <form action="{{ route('steps.destroy', ['scenario' => $scenario->id, 'step' => $step->id]) }}"
               method="POST" 
               onsubmit="return confirm('Weet je zeker dat je deze vraag wilt verwijderen?');"
               class="flex justify-end">

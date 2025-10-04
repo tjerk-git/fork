@@ -44,12 +44,14 @@
                             Resultaten
                         </a>
                     </li>
+                    @if(Auth::check())
                     <li>
-                        <a href="{{ route('users.index') }}" 
+                        <a href="{{ route('users.index') }}"
                            class="flex items-center rounded-lg px-4 py-2 text-sm {{ request()->routeIs('users.*') ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:bg-muted' }}">
                             Gebruikers
                         </a>
                     </li>
+                    @endif
                 </ul>
             </nav>
         </aside>

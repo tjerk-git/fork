@@ -147,11 +147,11 @@
                                         </td>
                                         <td class="p-4 align-middle">
                                             <div class="flex items-center gap-2">
-                                                <a href="{{ route('steps.edit', ['step' => $step->id, 'scenario' => $scenario->id]) }}"
+                                                <a href="{{ route('steps.edit', ['scenario' => $scenario->id, 'step' => $step->id]) }}"
                                                         class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-input bg-background text-sm font-medium ring-offset-background transition-colors hover:bg-accent hover:text-accent-foreground">
                                                     <i class="fas fa-pencil"></i>
                                                 </a>
-                                                <form action="{{ route('steps.destroy', ['step' => $step->id, 'scenario' => $scenario->id]) }}"
+                                                <form action="{{ route('steps.destroy', ['scenario' => $scenario->id, 'step' => $step->id]) }}"
                                                       method="POST" class="inline">
                                                     @csrf
                                                     @method('DELETE')
