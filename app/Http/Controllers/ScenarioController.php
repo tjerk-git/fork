@@ -33,6 +33,7 @@ class ScenarioController extends Controller
     {
         $validatedData = $request->validate([
             'name' => 'required|max:255',
+            'description' => 'nullable|string',
             'is_public' => 'nullable|boolean',
             'access_code' => 'nullable|string|min:6|max:20',
         ]);
